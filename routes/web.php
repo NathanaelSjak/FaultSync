@@ -17,7 +17,7 @@ Route::middleware('auth')->group(function() {
     Route::put('/categories/edit/{id}', [CategoryController::class, 'edit'])->name('categories.edit');
 
     // View Category
-    Route::get('/categories/{id}', [CategoryController::class, 'view'])->name('categories.view');
+    Route::get('/categories/view/{id}', [CategoryController::class, 'view'])->name('categories.view');
 
     // Remove Category
     Route::delete('/categories/remove/{id}', [CategoryController::class, 'remove'])->name('categories.remove');
