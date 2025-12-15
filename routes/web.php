@@ -1,95 +1,135 @@
 <?php
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\BankAccountController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes for Category Management
+| Home Route
 |--------------------------------------------------------------------------
-|
-| All routes are protected by 'auth' middleware to ensure only
-| authenticated users can access them.
-|
 */
+Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect('/dashboard');
+    }
+    return redirect('/login');
+});
 
+/*
+|--------------------------------------------------------------------------
+| Authentication Routes (Views)
+|--------------------------------------------------------------------------
+*/
+Route::get('/login', function () {
+    return view('auth.login');
+})->name('login')->middleware('guest');
+
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register')->middleware('guest');
+
+/*
+|--------------------------------------------------------------------------
+| Authentication API Routes
+|--------------------------------------------------------------------------
+*/
+Route::prefix('auth')->name('auth.')->group(function() {
+    Route::post('/register', [AuthController::class, 'register'])->name('register');
+    Route::post('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
+});
+
+/*
+|--------------------------------------------------------------------------
+| Protected Routes (Require Authentication)
+|--------------------------------------------------------------------------
+*/
 Route::middleware('auth')->group(function() {
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Dashboard Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+    
+    Route::get('/dashboard/summary', [DashboardController::class, 'summary'])->name('dashboard.summary');
+    Route::get('/dashboard/account/{accountId}/balance', [DashboardController::class, 'accountBalance'])->name('dashboard.account.balance');
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Bank Account Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/bank-accounts', function () {
+        return view('bank-accounts.index');
+    })->name('bank-accounts.index');
+    
+    Route::resource('bank-accounts', BankAccountController::class)->except(['index', 'create', 'edit']);
     
     /*
     |--------------------------------------------------------------------------
     | Category Routes
     |--------------------------------------------------------------------------
-    |
-    | Standard RESTful routes for category CRUD operations
-    | Following Laravel's resource controller naming conventions
-    |
     */
+    Route::get('/categories', function () {
+        return view('category');
+    })->name('categories.index');
     
-    // Resource routes akan menghasilkan:
-    // GET    /categories           → index()    - List all categories
-    // GET    /categories/create    → create()   - Show create form (optional)
-    // POST   /categories           → store()    - Store new category
-    // GET    /categories/{id}      → show()     - Show single category
-    // GET    /categories/{id}/edit → edit()     - Show edit form
-    // PUT    /categories/{id}      → update()   - Update category
-    // DELETE /categories/{id}      → destroy()  - Delete category
-    Route::resource('categories', CategoryController::class);
+    Route::resource('categories', CategoryController::class)->except(['index', 'create', 'edit']);
     
-    /*
-    |--------------------------------------------------------------------------
-    | Additional Category Routes
-    |--------------------------------------------------------------------------
-    |
-    | Routes for additional functionality beyond basic CRUD
-    |
-    */
     Route::prefix('categories')->name('categories.')->group(function() {
-        
-        // Live search with AJAX
-        Route::get('/search', [CategoryController::class, 'search'])
-            ->name('search');
-            
-        // Soft delete restore
+        Route::get('/search', [CategoryController::class, 'search'])->name('search');
         Route::patch('/{id}/restore', [CategoryController::class, 'restore'])
             ->name('restore')
             ->where('id', '[0-9]+');
-            
-        // Force delete permanently
         Route::delete('/{id}/force-delete', [CategoryController::class, 'forceDelete'])
             ->name('force-delete')
             ->where('id', '[0-9]+');
-            
-        // View trashed (soft deleted) categories
-        Route::get('/trashed', [CategoryController::class, 'trashed'])
-            ->name('trashed');
-            
-        // Update category status (active/inactive)
+        Route::get('/trashed', [CategoryController::class, 'trashed'])->name('trashed');
         Route::patch('/{id}/status', [CategoryController::class, 'updateStatus'])
             ->name('status.update')
             ->where('id', '[0-9]+');
-            
-        // Bulk actions
-        Route::post('/bulk/delete', [CategoryController::class, 'bulkDelete'])
-            ->name('bulk.delete');
-        Route::post('/bulk/restore', [CategoryController::class, 'bulkRestore'])
-            ->name('bulk.restore');
-            
-        // Export categories to CSV/Excel
-        Route::get('/export', [CategoryController::class, 'export'])
-            ->name('export');
-            
-        // Import categories from file
-        Route::post('/import', [CategoryController::class, 'import'])
-            ->name('import');
-            
-        // Category statistics
-        Route::get('/statistics', [CategoryController::class, 'statistics'])
-            ->name('statistics');
-            
-        // Category type filter
+        Route::post('/bulk/delete', [CategoryController::class, 'bulkDelete'])->name('bulk.delete');
+        Route::post('/bulk/restore', [CategoryController::class, 'bulkRestore'])->name('bulk.restore');
+        Route::get('/export', [CategoryController::class, 'export'])->name('export');
+        Route::post('/import', [CategoryController::class, 'import'])->name('import');
+        Route::get('/statistics', [CategoryController::class, 'statistics'])->name('statistics');
         Route::get('/type/{type}', [CategoryController::class, 'byType'])
             ->name('type')
             ->where('type', 'income|expense|transfer');
+    });
+    
+    /*
+    |--------------------------------------------------------------------------
+    | Transaction Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/transactions', function () {
+        return view('transactions.index');
+    })->name('transactions.index');
+    
+    Route::resource('transactions', TransactionController::class)->except(['index', 'create', 'edit']);
+    
+    /*
+    |--------------------------------------------------------------------------
+    | User Profile Routes
+    |--------------------------------------------------------------------------
+    */
+    Route::get('/profile', function () {
+        return view('profile.index');
+    })->name('profile.index');
+    
+    Route::prefix('profile')->name('profile.')->group(function() {
+        Route::get('/api', [AuthController::class, 'profile'])->name('api.show');
+        Route::put('/api', [AuthController::class, 'updateProfile'])->name('api.update');
+        Route::delete('/api', [AuthController::class, 'deleteAccount'])->name('api.delete');
     });
     
 });
