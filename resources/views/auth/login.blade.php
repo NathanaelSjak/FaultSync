@@ -54,12 +54,21 @@
 $('#loginForm').on('submit', function(e) {
     e.preventDefault();
     
+    const errorDiv = $('#errorMessage');
+    const submitBtn = $(this).find('button[type="submit"]');
+    
+    // Clear previous errors
+    errorDiv.addClass('hidden');
+    
+    // Disable submit button and show loading state
+    submitBtn.prop('disabled', true).text('Memproses...');
+    
     $.ajax({
         url: '/auth/login',
         method: 'POST',
         data: $(this).serialize(),
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': $('input[name="_token"]').val()
         },
         success: function(response) {
             if (response.success) {
@@ -67,12 +76,23 @@ $('#loginForm').on('submit', function(e) {
             }
         },
         error: function(xhr) {
-            const errorDiv = $('#errorMessage');
-            if (xhr.responseJSON && xhr.responseJSON.message) {
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                // Validation errors
+                const errors = Object.values(xhr.responseJSON.errors).flat();
+                errorDiv.html(errors.join('<br>')).removeClass('hidden');
+            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                // API message error (invalid credentials, etc)
                 errorDiv.text(xhr.responseJSON.message).removeClass('hidden');
+            } else if (xhr.status >= 500) {
+                // Server error
+                errorDiv.text('Terjadi kesalahan pada server. Silakan coba lagi nanti.').removeClass('hidden');
             } else {
+                // Generic error
                 errorDiv.text('Terjadi kesalahan saat login').removeClass('hidden');
             }
+            
+            // Re-enable submit button
+            submitBtn.prop('disabled', false).text('Masuk');
         }
     });
 });

@@ -57,28 +57,65 @@
 $('#registerForm').on('submit', function(e) {
     e.preventDefault();
     
+    const errorDiv = $('#errorMessage');
+    const submitBtn = $(this).find('button[type="submit"]');
+    const password = $('input[name="password"]').val();
+    const passwordConfirm = $('input[name="password_confirmation"]').val();
+    
+    // Clear previous errors
+    errorDiv.addClass('hidden').html('');
+    
+    // Validate password confirmation
+    if (password !== passwordConfirm) {
+        errorDiv.text('Password dan konfirmasi password tidak cocok').removeClass('hidden');
+        return;
+    }
+    
+    // Disable submit button and show loading state
+    submitBtn.prop('disabled', true).text('Mendaftar...');
+    
+    const csrfToken = $('input[name="_token"]').val();
+    console.log('CSRF Token:', csrfToken);
+    console.log('Form Data:', $(this).serialize());
+    
     $.ajax({
         url: '/auth/register',
         method: 'POST',
         data: $(this).serialize(),
         headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            'X-CSRF-TOKEN': csrfToken,
+            'Accept': 'application/json'
         },
+        dataType: 'json',
         success: function(response) {
+            console.log('Success:', response);
             if (response.success) {
                 window.location.href = '/dashboard';
             }
         },
         error: function(xhr) {
-            const errorDiv = $('#errorMessage');
+            console.log('Error Status:', xhr.status);
+            console.log('Error Response:', xhr.responseJSON);
+            
             if (xhr.responseJSON && xhr.responseJSON.errors) {
+                // Validation errors
                 const errors = Object.values(xhr.responseJSON.errors).flat();
+                console.log('Validation Errors:', errors);
                 errorDiv.html(errors.join('<br>')).removeClass('hidden');
             } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                // API message error
+                console.log('Message Error:', xhr.responseJSON.message);
                 errorDiv.text(xhr.responseJSON.message).removeClass('hidden');
+            } else if (xhr.status >= 500) {
+                // Server error
+                errorDiv.text('Terjadi kesalahan pada server. Silakan coba lagi nanti.').removeClass('hidden');
             } else {
+                // Generic error
                 errorDiv.text('Terjadi kesalahan saat registrasi').removeClass('hidden');
             }
+            
+            // Re-enable submit button
+            submitBtn.prop('disabled', false).text('Daftar');
         }
     });
 });

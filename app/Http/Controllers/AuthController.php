@@ -13,13 +13,13 @@ class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        try {
-            $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
-                'password' => ['required', 'confirmed', Password::defaults()],
-            ]);
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => ['required', 'confirmed', Password::defaults()],
+        ]);
 
+        try {
             DB::beginTransaction();
 
             $user = User::create([
@@ -39,13 +39,6 @@ class AuthController extends Controller
                     'message' => 'Registration successful'
                 ]
             ], 201);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            DB::rollBack();
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed',
-                'errors' => $e->errors()
-            ], 422);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
