@@ -11,34 +11,38 @@ use Illuminate\Support\Facades\Auth;
 class CategoryController extends Controller
 {
     /**
-     * Display all categories (with optional search & filter)
+     * Display all categories
      */
     public function index(Request $request)
     {
-        $query = Category::byUser();
+        try {
+            $query = Category::byUser();
 
-        // filter type (income / expense)
-        if ($request->filled('type')) {
-            $query->where('type', $request->type);
+            if ($request->filled('type')) {
+                $query->where('type', $request->type);
+            }
+
+            if ($request->filled('search')) {
+                $query->search($request->search);
+            }
+
+            $categories = $query
+                ->orderBy('type')
+                ->orderBy('name')
+                ->get();
+
+            return response()->json([
+                'success' => true,
+                'data' => $categories,
+                'message' => 'Categories retrieved successfully'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to retrieve categories',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // search by name
-        if ($request->filled('search')) {
-            $query->search($request->search);
-        }
-
-        $categories = $query
-            ->orderBy('type')
-            ->orderBy('name')
-            ->get();
-
-        // kalau dipakai untuk AJAX
-        if ($request->expectsJson()) {
-            return response()->json($categories);
-        }
-
-        // kalau dipakai untuk blade
-        return view('categories.index', compact('categories'));
     }
 
     /**
@@ -46,36 +50,61 @@ class CategoryController extends Controller
      */
     public function store(CreateCategoryRequest $request)
     {
-        $exists = Category::byUser()
-            ->where('name', $request->name)
-            ->exists();
+        try {
+            $exists = Category::byUser()
+                ->where('name', $request->name)
+                ->exists();
 
-        if ($exists) {
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Category name already exists'
+                ], 422);
+            }
+
+            $category = Category::create([
+                'user_id'     => Auth::id(),
+                'name'        => $request->name,
+                'type'        => $request->type,
+                'description' => $request->description,
+                'color'       => $request->color,
+                'icon'        => $request->icon,
+                'status'      => true,
+            ]);
+
             return response()->json([
-                'message' => 'Category name already exists'
-            ], 422);
+                'success' => true,
+                'data' => $category,
+                'message' => 'Category created successfully'
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to create category',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $category = Category::create([
-            'user_id'     => Auth::id(),
-            'name'        => $request->name,
-            'type'        => $request->type,
-            'description' => $request->description,
-            'color'       => $request->color,
-            'icon'        => $request->icon,
-            'status'      => true,
-        ]);
-
-        return response()->json($category, 201);
     }
 
     /**
-     * Show single category
+     * Show category detail
      */
     public function show($id)
     {
-        $category = Category::byUser()->findOrFail($id);
-        return response()->json($category);
+        try {
+            $category = Category::byUser()->findOrFail($id);
+
+            return response()->json([
+                'success' => true,
+                'data' => $category,
+                'message' => 'Category retrieved successfully'
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found'
+            ], 404);
+        }
     }
 
     /**
@@ -83,29 +112,41 @@ class CategoryController extends Controller
      */
     public function update(EditCategoryRequest $request, $id)
     {
-        $category = Category::byUser()->findOrFail($id);
+        try {
+            $category = Category::byUser()->findOrFail($id);
 
-        $exists = Category::byUser()
-            ->where('name', $request->name)
-            ->where('id', '!=', $id)
-            ->exists();
+            $exists = Category::byUser()
+                ->where('name', $request->name)
+                ->where('id', '!=', $id)
+                ->exists();
 
-        if ($exists) {
+            if ($exists) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Category name already exists'
+                ], 422);
+            }
+
+            $category->update([
+                'name'        => $request->name,
+                'type'        => $request->type,
+                'description' => $request->description,
+                'color'       => $request->color,
+                'icon'        => $request->icon,
+                'status'      => $request->boolean('status', true),
+            ]);
+
             return response()->json([
-                'message' => 'Category name already exists'
-            ], 422);
+                'success' => true,
+                'data' => $category,
+                'message' => 'Category updated successfully'
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found'
+            ], 404);
         }
-
-        $category->update([
-            'name'        => $request->name,
-            'type'        => $request->type,
-            'description' => $request->description,
-            'color'       => $request->color,
-            'icon'        => $request->icon,
-            'status'      => $request->boolean('status', true),
-        ]);
-
-        return response()->json($category);
     }
 
     /**
@@ -113,11 +154,19 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-        $category = Category::byUser()->findOrFail($id);
-        $category->delete();
+        try {
+            $category = Category::byUser()->findOrFail($id);
+            $category->delete();
 
-        return response()->json([
-            'message' => 'Category deleted successfully'
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Category deleted successfully'
+            ]);
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Category not found'
+            ], 404);
+        }
     }
 }
