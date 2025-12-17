@@ -13,7 +13,12 @@ class CategoryController extends Controller
     /**
      * Display all categories
      */
-    public function index(Request $request)
+    public function index()
+    {
+        return view('categories.index');
+    }
+
+    public function list(Request $request)
     {
         try {
             $query = Category::byUser();
@@ -33,14 +38,12 @@ class CategoryController extends Controller
 
             return response()->json([
                 'success' => true,
-                'data' => $categories,
-                'message' => 'Categories retrieved successfully'
+                'data' => $categories
             ]);
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to retrieve categories',
-                'error' => $e->getMessage()
+                'message' => $e->getMessage()
             ], 500);
         }
     }

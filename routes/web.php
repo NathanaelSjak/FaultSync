@@ -78,10 +78,9 @@ Route::middleware('auth')->group(function() {
     | Category Routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/categories', function () {
-        return view('category');
-    })->name('categories.index');
     
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/api/categories', [CategoryController::class, 'list']);
     Route::resource('categories', CategoryController::class)->except(['index', 'create', 'edit']);
     
     Route::prefix('categories')->name('categories.')->group(function() {
