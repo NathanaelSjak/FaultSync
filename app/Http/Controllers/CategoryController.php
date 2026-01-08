@@ -132,11 +132,14 @@ class CategoryController extends Controller
 
             $category->update([
                 'name'        => $request->name,
-                'type'        => $request->type,
-                'description' => $request->description,
-                'color'       => $request->color,
-                'icon'        => $request->icon,
-                'status'      => $request->boolean('status', true),
+                'type'        => $request->type ?? $category->type,
+                'description' => $request->description ?? $category->description,
+                'color'       => $request->color ?? $category->color,
+                // Jangan pernah set icon ke null, gunakan nilai lama jika tidak dikirim
+                'icon'        => $request->icon ?? $category->icon,
+                'status'      => $request->has('status')
+                    ? $request->boolean('status')
+                    : $category->status,
             ]);
 
             return response()->json([

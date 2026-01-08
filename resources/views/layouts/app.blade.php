@@ -31,12 +31,77 @@
             border-radius: 4px;
         }
         
+        /* Navigation container - vertical layout */
+        nav {
+            display: flex !important;
+            flex-direction: column !important;
+        }
+        
+        nav > div {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 4px;
+        }
+        
+        /* Sidebar link styling - horizontal items in vertical list */
         .sidebar-link {
-            @apply flex items-center px-4 py-3 text-gray-700 rounded-lg transition-colors hover:bg-gray-100;
+            @apply flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 w-full;
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+            width: 100% !important;
+            margin-bottom: 4px;
         }
         
         .sidebar-link.active {
-            @apply bg-blue-50 text-blue-600 font-medium;
+            @apply bg-blue-50 text-blue-600 font-medium shadow-sm;
+        }
+        
+        .sidebar-link i {
+            width: 20px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+        
+        .sidebar-link span {
+            flex: 1;
+        }
+        
+        .sidebar {
+            transition: transform 0.3s ease;
+        }
+        
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0 !important;
+            }
+            
+            /* Overlay when sidebar is open */
+            .sidebar.open::before {
+                content: '';
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: -1;
+            }
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+            transition-duration: 150ms;
         }
         
         .modal-overlay {
@@ -53,55 +118,57 @@
 <body class="h-full bg-gray-50">
     @auth
     {{-- Sidebar --}}
-    <aside class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50">
+    <aside class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 flex flex-col">
         <div class="p-6 border-b">
-            <div class="flex items-center space-x-3">
+            <a href="/dashboard" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                     <i class="fas fa-university text-white text-lg"></i>
                 </div>
                 <h1 class="text-xl font-bold text-gray-800">FaultSync</h1>
-            </div>
+            </a>
         </div>
         
-        <nav class="p-4 space-y-2">
-            <a href="/dashboard" class="sidebar-link {{ request()->is('dashboard*') ? 'active' : '' }}">
-                <i class="fas fa-tachometer-alt mr-3"></i>
-                Dashboard
-            </a>
-            
-            <a href="/bank-accounts" class="sidebar-link {{ request()->is('bank-accounts*') ? 'active' : '' }}">
-                <i class="fas fa-university mr-3"></i>
-                Akun Bank
-            </a>
-            
-            <a href="/categories" class="sidebar-link {{ request()->is('categories*') ? 'active' : '' }}">
-                <i class="fas fa-tags mr-3"></i>
-                Kategori
-            </a>
-            
-            <a href="/transactions" class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}">
-                <i class="fas fa-exchange-alt mr-3"></i>
-                Transaksi
-            </a>
-            
-            <a href="/profile" class="sidebar-link {{ request()->is('profile*') ? 'active' : '' }}">
-                <i class="fas fa-user mr-3"></i>
-                Profil
-            </a>
+        <nav class="flex-1 overflow-y-auto py-4">
+            <div class="px-4 space-y-1">
+                <a href="/dashboard" class="sidebar-link {{ request()->is('dashboard') || request()->is('/') ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt mr-3"></i>
+                    <span>Dashboard</span>
+                </a>
+                
+                <a href="/bank-accounts" class="sidebar-link {{ request()->is('bank-accounts*') ? 'active' : '' }}">
+                    <i class="fas fa-university mr-3"></i>
+                    <span>Akun Bank</span>
+                </a>
+                
+                <a href="/categories" class="sidebar-link {{ request()->is('categories*') ? 'active' : '' }}">
+                    <i class="fas fa-tags mr-3"></i>
+                    <span>Kategori</span>
+                </a>
+                
+                <a href="/transactions" class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}">
+                    <i class="fas fa-exchange-alt mr-3"></i>
+                    <span>Transaksi</span>
+                </a>
+                
+                <a href="/profile" class="sidebar-link {{ request()->is('profile*') ? 'active' : '' }}">
+                    <i class="fas fa-user mr-3"></i>
+                    <span>Profil</span>
+                </a>
+            </div>
         </nav>
         
-        <div class="absolute bottom-0 w-full p-4 border-t">
+        <div class="absolute bottom-0 w-full p-4 border-t bg-white">
             <div class="flex items-center space-x-3 p-3 bg-gray-50 rounded-lg">
                 <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
                     <span class="text-white text-sm font-semibold">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
                 </div>
-                <div class="flex-1">
-                    <p class="text-sm font-medium text-gray-800">{{ Auth::user()->name }}</p>
-                    <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                <div class="flex-1 min-w-0">
+                    <p class="text-sm font-medium text-gray-800 truncate">{{ Auth::user()->name }}</p>
+                    <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                 </div>
                 <form action="/auth/logout" method="POST" class="inline">
                     @csrf
-                    <button type="submit" class="text-gray-400 hover:text-red-500">
+                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Logout">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </form>
@@ -111,13 +178,36 @@
     @endauth
 
     {{-- Main Content --}}
-    <div class="@auth ml-64 @endauth min-h-screen">
+    <div class="@auth ml-64 @endauth min-h-screen main-content">
         @auth
-        {{-- Navbar --}}
-        <header class="bg-white shadow-sm sticky top-0 z-40">
-            <div class="px-6 py-4 flex items-center justify-between">
-                <div>
-                    <h2 class="text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
+        {{-- Top Navbar --}}
+        <header class="bg-white shadow-sm sticky top-0 z-40 border-b">
+            <div class="px-4 md:px-6 py-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center space-x-4">
+                        <button id="mobileMenuToggle" class="md:hidden text-gray-600 hover:text-gray-800 focus:outline-none">
+                            <i class="fas fa-bars text-xl"></i>
+                        </button>
+                        <div>
+                            <h2 class="text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
+                            @hasSection('breadcrumb')
+                            <nav class="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                                <a href="/dashboard" class="hover:text-blue-500 transition-colors">Dashboard</a>
+                                <i class="fas fa-chevron-right text-xs"></i>
+                                <span class="text-gray-700">@yield('breadcrumb')</span>
+                            </nav>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="hidden md:flex items-center space-x-4">
+                        <div class="text-right">
+                            <p class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</p>
+                            <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                        </div>
+                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                            <span class="text-white text-sm font-semibold">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </header>
@@ -171,6 +261,26 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
+            const sidebar = document.querySelector('.sidebar');
+            if (sidebar) {
+                sidebar.classList.toggle('open');
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const toggle = document.getElementById('mobileMenuToggle');
+            
+            if (window.innerWidth < 768 && sidebar && toggle) {
+                if (!sidebar.contains(event.target) && !toggle.contains(event.target)) {
+                    sidebar.classList.remove('open');
+                }
+            }
+        });
+
         // Auto-hide alerts after 5 seconds
         setTimeout(() => {
             const alerts = document.querySelectorAll('[class*="bg-green-50"], [class*="bg-red-50"]');
@@ -180,9 +290,18 @@
                 setTimeout(() => alert.remove(), 500);
             });
         }, 5000);
+
+        // Sidebar scroll behavior
+        window.addEventListener('resize', function() {
+            const sidebar = document.querySelector('.sidebar');
+            if (window.innerWidth >= 768 && sidebar) {
+                sidebar.classList.remove('open');
+            }
+        });
     </script>
     
     @stack('scripts')
 </body>
 </html>
+
 

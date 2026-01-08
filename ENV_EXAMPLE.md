@@ -120,3 +120,5 @@ VITE_APP_NAME="${APP_NAME}"
 - **APP_DEBUG**: Set to `false` in production
 - **APP_ENV**: Set to `production` when deploying
 
+
+

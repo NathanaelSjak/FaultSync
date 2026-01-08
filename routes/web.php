@@ -71,7 +71,16 @@ Route::middleware('auth')->group(function() {
         return view('bank-accounts.index');
     })->name('bank-accounts.index');
     
-    Route::resource('bank-accounts', BankAccountController::class)->except(['index', 'create', 'edit']);
+    // API routes for AJAX requests
+    Route::prefix('api')->group(function() {
+        Route::get('/bank-accounts', [BankAccountController::class, 'index']);
+        Route::get('/bank-accounts/{id}', [BankAccountController::class, 'show']);
+        Route::post('/bank-accounts', [BankAccountController::class, 'store']);
+        Route::put('/bank-accounts/{id}', [BankAccountController::class, 'update']);
+        Route::delete('/bank-accounts/{id}', [BankAccountController::class, 'destroy']);
+    });
+    
+    Route::resource('bank-accounts', BankAccountController::class)->except(['index', 'create', 'edit', 'show', 'store', 'update', 'destroy']);
     
     /*
     |--------------------------------------------------------------------------
@@ -114,7 +123,16 @@ Route::middleware('auth')->group(function() {
         return view('transactions.index');
     })->name('transactions.index');
     
-    Route::resource('transactions', TransactionController::class)->except(['index', 'create', 'edit']);
+    // API routes for AJAX requests
+    Route::prefix('api')->group(function() {
+        Route::get('/transactions', [TransactionController::class, 'index']);
+        Route::get('/transactions/{id}', [TransactionController::class, 'show']);
+        Route::post('/transactions', [TransactionController::class, 'store']);
+        Route::put('/transactions/{id}', [TransactionController::class, 'update']);
+        Route::delete('/transactions/{id}', [TransactionController::class, 'destroy']);
+    });
+    
+    Route::resource('transactions', TransactionController::class)->except(['index', 'create', 'edit', 'show', 'store', 'update', 'destroy']);
     
     /*
     |--------------------------------------------------------------------------

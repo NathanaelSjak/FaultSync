@@ -116,7 +116,7 @@ function loadCategories() {
         search: $('#searchCategory').val()
     };
 
-    $.get('/categories', params, function (res) {
+    $.get('/api/categories', params, function (res) {
         if (!res.success) return;
 
         let html = '';
@@ -153,6 +153,11 @@ function loadCategories() {
         });
 
         $('#categoryGrid').html(html);
+    }).fail(function (xhr) {
+        console.error('Error loading categories:', xhr);
+        $('#categoryGrid').html(
+            '<p class="col-span-full text-center text-red-500">Gagal memuat kategori. Coba refresh halaman.</p>'
+        );
     });
 }
 
@@ -186,7 +191,8 @@ function saveCategory() {
     const method = id ? 'PUT' : 'POST';
 
     $.ajax({
-        url, method,
+        url: url,
+        type: method,
         data: {
             _token: $('meta[name="csrf-token"]').attr('content'),
             name: $('#categoryName').val(),
@@ -194,10 +200,24 @@ function saveCategory() {
             color: $('#categoryColor').val(),
             description: $('#categoryDescription').val()
         },
-        success() {
+        success(res) {
+            if (!res || res.success === false) {
+                alert(res && res.message ? res.message : 'Gagal menyimpan kategori');
+                return;
+            }
             closeModal();
             loadCategories();
             alert('Kategori berhasil disimpan');
+        },
+        error(xhr) {
+            console.error('Error saving category:', xhr);
+            if (xhr.responseJSON && xhr.responseJSON.errors) {
+                alert('Error: ' + Object.values(xhr.responseJSON.errors).flat().join(', '));
+            } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                alert(xhr.responseJSON.message);
+            } else {
+                alert('Terjadi kesalahan saat menyimpan kategori');
+            }
         }
     });
 }
@@ -207,11 +227,23 @@ function deleteCategory(id) {
 
     $.ajax({
         url: `/categories/${id}`,
-        method: 'DELETE',
+        type: 'DELETE',
         data: { _token: $('meta[name="csrf-token"]').attr('content') },
-        success() {
+        success(res) {
+            if (!res || res.success === false) {
+                alert(res && res.message ? res.message : 'Gagal menghapus kategori');
+                return;
+            }
             loadCategories();
             alert('Kategori dihapus');
+        },
+        error(xhr) {
+            console.error('Error deleting category:', xhr);
+            if (xhr.responseJSON && xhr.responseJSON.message) {
+                alert(xhr.responseJSON.message);
+            } else {
+                alert('Terjadi kesalahan saat menghapus kategori');
+            }
         }
     });
 }

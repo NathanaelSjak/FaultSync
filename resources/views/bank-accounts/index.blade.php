@@ -98,7 +98,7 @@ $(document).ready(function() {
 
 function loadBankAccounts() {
     $.ajax({
-        url: '/bank-accounts',
+        url: '/api/bank-accounts',
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -130,6 +130,10 @@ function loadBankAccounts() {
                 }
                 $('#bankAccountsTable').html(html);
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading bank accounts:', xhr);
+            $('#bankAccountsTable').html('<tr><td colspan="5" class="px-6 py-8 text-center text-red-500">Error memuat data. Silakan refresh halaman.</td></tr>');
         }
     });
 }
@@ -147,7 +151,7 @@ function closeModal() {
 
 function editBankAccount(id) {
     $.ajax({
-        url: `/bank-accounts/${id}`,
+        url: `/api/bank-accounts/${id}`,
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -163,13 +167,17 @@ function editBankAccount(id) {
                 $('#description').val(account.description || '');
                 $('#bankAccountModal').removeClass('hidden');
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading bank account:', xhr);
+            alert('Terjadi kesalahan saat memuat data akun bank');
         }
     });
 }
 
 function saveBankAccount() {
     const id = $('#bankAccountId').val();
-    const url = id ? `/bank-accounts/${id}` : '/bank-accounts';
+    const url = id ? `/api/bank-accounts/${id}` : '/api/bank-accounts';
     const method = id ? 'PUT' : 'POST';
     
     $.ajax({
@@ -202,7 +210,7 @@ function deleteBankAccount(id) {
     }
     
     $.ajax({
-        url: `/bank-accounts/${id}`,
+        url: `/api/bank-accounts/${id}`,
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -216,6 +224,8 @@ function deleteBankAccount(id) {
         error: function(xhr) {
             if (xhr.responseJSON) {
                 alert(xhr.responseJSON.message || 'Terjadi kesalahan saat menghapus');
+            } else {
+                alert('Terjadi kesalahan saat menghapus');
             }
         }
     });
@@ -229,4 +239,5 @@ $('#bankAccountModal').on('click', function(e) {
 </script>
 @endpush
 @endsection
+
 

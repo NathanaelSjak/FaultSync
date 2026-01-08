@@ -151,7 +151,7 @@ $(document).ready(function() {
 
 function loadBankAccounts() {
     $.ajax({
-        url: '/bank-accounts',
+        url: '/api/bank-accounts',
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -165,13 +165,16 @@ function loadBankAccounts() {
                 $('#transactionAccount').html(options);
                 $('#filterAccount').html('<option value="">Semua Akun</option>' + response.data.map(a => `<option value="${a.id}">${a.bank_name} - ${a.account_number}</option>`).join(''));
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading bank accounts:', xhr);
         }
     });
 }
 
 function loadCategories() {
     $.ajax({
-        url: '/categories',
+        url: '/api/categories',
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -185,6 +188,9 @@ function loadCategories() {
                 $('#transactionCategory').html(options);
                 $('#filterCategory').html('<option value="">Semua Kategori</option>' + response.data.map(c => `<option value="${c.id}">${c.name}</option>`).join(''));
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading categories:', xhr);
         }
     });
 }
@@ -197,7 +203,7 @@ function loadTransactions() {
     if ($('#filterEndDate').val()) params.append('end_date', $('#filterEndDate').val());
     
     $.ajax({
-        url: '/transactions' + (params.toString() ? '?' + params.toString() : ''),
+        url: '/api/transactions' + (params.toString() ? '?' + params.toString() : ''),
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -238,6 +244,10 @@ function loadTransactions() {
                 }
                 $('#transactionsTable').html(html);
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading transactions:', xhr);
+            $('#transactionsTable').html('<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">Error memuat data. Silakan refresh halaman.</td></tr>');
         }
     });
 }
@@ -273,7 +283,7 @@ function closeModal() {
 
 function editTransaction(id) {
     $.ajax({
-        url: `/transactions/${id}`,
+        url: `/api/transactions/${id}`,
         method: 'GET',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -291,13 +301,17 @@ function editTransaction(id) {
                 $('#transactionDescription').val(transaction.description || '');
                 $('#transactionModal').removeClass('hidden');
             }
+        },
+        error: function(xhr) {
+            console.error('Error loading transaction:', xhr);
+            alert('Terjadi kesalahan saat memuat data transaksi');
         }
     });
 }
 
 function saveTransaction() {
     const id = $('#transactionId').val();
-    const url = id ? `/transactions/${id}` : '/transactions';
+    const url = id ? `/api/transactions/${id}` : '/api/transactions';
     const method = id ? 'PUT' : 'POST';
     
     $.ajax({
@@ -330,7 +344,7 @@ function deleteTransaction(id) {
     }
     
     $.ajax({
-        url: `/transactions/${id}`,
+        url: `/api/transactions/${id}`,
         method: 'DELETE',
         headers: {
             'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -344,6 +358,8 @@ function deleteTransaction(id) {
         error: function(xhr) {
             if (xhr.responseJSON) {
                 alert(xhr.responseJSON.message || 'Terjadi kesalahan saat menghapus');
+            } else {
+                alert('Terjadi kesalahan saat menghapus');
             }
         }
     });
@@ -369,4 +385,5 @@ $('#transactionModal').on('click', function(e) {
 </script>
 @endpush
 @endsection
+
 
