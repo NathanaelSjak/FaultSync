@@ -71,8 +71,40 @@
                     </div>
 
                     <div>
+                        <label class="block text-sm font-medium mb-1">Icon</label>
+                        <div class="relative">
+                            <select id="categoryIcon" required
+                                class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 appearance-none">
+                                <option value="fas fa-tag">🏷️ Tag</option>
+                                <option value="fas fa-money-bill-wave">💰 Uang</option>
+                                <option value="fas fa-wallet">💳 Dompet</option>
+                                <option value="fas fa-coins">🪙 Koin</option>
+                                <option value="fas fa-piggy-bank">🐷 Celengan</option>
+                                <option value="fas fa-credit-card">💳 Kartu Kredit</option>
+                                <option value="fas fa-shopping-cart">🛒 Belanja</option>
+                                <option value="fas fa-utensils">🍴 Makanan</option>
+                                <option value="fas fa-car">🚗 Mobil</option>
+                                <option value="fas fa-home">🏠 Rumah</option>
+                                <option value="fas fa-heart">❤️ Kesehatan</option>
+                                <option value="fas fa-graduation-cap">🎓 Pendidikan</option>
+                                <option value="fas fa-film">🎬 Hiburan</option>
+                                <option value="fas fa-file-invoice">📄 Tagihan</option>
+                                <option value="fas fa-chart-line">📈 Investasi</option>
+                                <option value="fas fa-gift">🎁 Hadiah</option>
+                                <option value="fas fa-laptop">💻 Freelance</option>
+                                <option value="fas fa-briefcase">💼 Pekerjaan</option>
+                                <option value="fas fa-exchange-alt">🔄 Transfer</option>
+                                <option value="fas fa-ellipsis-h">⋯ Lainnya</option>
+                            </select>
+                            <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+                                <i id="selectedIconPreview" class="fas fa-tag text-gray-400"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
                         <label class="block text-sm font-medium mb-1">Warna</label>
-                        <input type="color" id="categoryColor"
+                        <input type="color" id="categoryColor" value="#6c757d"
                             class="w-full h-10 border rounded-lg">
                     </div>
 
@@ -107,6 +139,11 @@ $(document).ready(function () {
     $('#categoryForm').on('submit', function (e) {
         e.preventDefault();
         saveCategory();
+    });
+
+    // Update icon preview when icon changes
+    $('#categoryIcon').on('change', function() {
+        updateIconPreview();
     });
 });
 
@@ -165,7 +202,15 @@ function openCreateModal() {
     $('#modalTitle').text('Tambah Kategori');
     $('#categoryForm')[0].reset();
     $('#categoryId').val('');
+    $('#categoryColor').val('#6c757d');
+    $('#categoryIcon').val('fas fa-tag');
+    updateIconPreview();
     $('#categoryModal').removeClass('hidden');
+}
+
+function updateIconPreview() {
+    const selectedIcon = $('#categoryIcon').val();
+    $('#selectedIconPreview').attr('class', selectedIcon + ' text-gray-400');
 }
 
 function closeModal() {
@@ -174,14 +219,23 @@ function closeModal() {
 
 function editCategory(id) {
     $.get(`/categories/${id}`, function (res) {
+        if (!res.success) {
+            alert('Gagal memuat data kategori');
+            return;
+        }
         const c = res.data;
         $('#modalTitle').text('Edit Kategori');
         $('#categoryId').val(c.id);
         $('#categoryName').val(c.name);
         $('#categoryType').val(c.type);
-        $('#categoryColor').val(c.color);
-        $('#categoryDescription').val(c.description);
+        $('#categoryColor').val(c.color || '#6c757d');
+        $('#categoryIcon').val(c.icon || 'fas fa-tag');
+        $('#categoryDescription').val(c.description || '');
+        updateIconPreview();
         $('#categoryModal').removeClass('hidden');
+    }).fail(function(xhr) {
+        console.error('Error loading category:', xhr);
+        alert('Terjadi kesalahan saat memuat data kategori');
     });
 }
 
@@ -197,7 +251,8 @@ function saveCategory() {
             _token: $('meta[name="csrf-token"]').attr('content'),
             name: $('#categoryName').val(),
             type: $('#categoryType').val(),
-            color: $('#categoryColor').val(),
+            icon: $('#categoryIcon').val() || 'fas fa-tag',
+            color: $('#categoryColor').val() || '#6c757d',
             description: $('#categoryDescription').val()
         },
         success(res) {

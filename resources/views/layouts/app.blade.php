@@ -166,7 +166,7 @@
                     <p class="text-sm font-medium text-gray-800 truncate">{{ Auth::user()->name }}</p>
                     <p class="text-xs text-gray-500 truncate">{{ Auth::user()->email }}</p>
                 </div>
-                <form action="/auth/logout" method="POST" class="inline">
+                <form id="logoutForm" action="/auth/logout" method="POST" class="inline">
                     @csrf
                     <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Logout">
                         <i class="fas fa-sign-out-alt"></i>
@@ -279,6 +279,36 @@
                     sidebar.classList.remove('open');
                 }
             }
+        });
+
+        // Handle logout form submission
+        document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const form = this;
+            const formData = new FormData(form);
+            
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = '/login';
+                } else {
+                    alert('Gagal logout: ' + (data.message || 'Terjadi kesalahan'));
+                }
+            })
+            .catch(error => {
+                console.error('Logout error:', error);
+                // Fallback: redirect anyway
+                window.location.href = '/login';
+            });
         });
 
         // Auto-hide alerts after 5 seconds

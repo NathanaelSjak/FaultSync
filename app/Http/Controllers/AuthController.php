@@ -97,16 +97,29 @@ class AuthController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            return response()->json([
-                'success' => true,
-                'message' => 'Logout successful'
-            ]);
+            // If it's an AJAX request, return JSON with redirect info
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Logout successful',
+                    'redirect' => '/login'
+                ]);
+            }
+
+            // Otherwise, redirect directly
+            return redirect('/login');
         } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Failed to logout',
-                'error' => $e->getMessage()
-            ], 500);
+            // If it's an AJAX request, return JSON error
+            if ($request->expectsJson() || $request->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Failed to logout',
+                    'error' => $e->getMessage()
+                ], 500);
+            }
+
+            // Otherwise, redirect to login with error
+            return redirect('/login')->with('error', 'Failed to logout');
         }
     }
 

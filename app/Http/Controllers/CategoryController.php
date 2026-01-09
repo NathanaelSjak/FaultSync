@@ -65,13 +65,21 @@ class CategoryController extends Controller
                 ], 422);
             }
 
+            // Set default icon based on type if not provided
+            $defaultIcon = match($request->type) {
+                'income' => 'fas fa-money-bill-wave',
+                'expense' => 'fas fa-shopping-cart',
+                'transfer' => 'fas fa-exchange-alt',
+                default => 'fas fa-tag',
+            };
+
             $category = Category::create([
                 'user_id'     => Auth::id(),
                 'name'        => $request->name,
                 'type'        => $request->type,
-                'description' => $request->description,
-                'color'       => $request->color,
-                'icon'        => $request->icon,
+                'description' => $request->description ?? null,
+                'color'       => $request->color ?? '#6c757d',
+                'icon'        => $request->icon ?? $defaultIcon,
                 'status'      => true,
             ]);
 
@@ -130,13 +138,20 @@ class CategoryController extends Controller
                 ], 422);
             }
 
+            // Set default icon based on type if not provided
+            $defaultIcon = match($request->type ?? $category->type) {
+                'income' => 'fas fa-money-bill-wave',
+                'expense' => 'fas fa-shopping-cart',
+                'transfer' => 'fas fa-exchange-alt',
+                default => 'fas fa-tag',
+            };
+
             $category->update([
                 'name'        => $request->name,
                 'type'        => $request->type ?? $category->type,
                 'description' => $request->description ?? $category->description,
-                'color'       => $request->color ?? $category->color,
-                // Jangan pernah set icon ke null, gunakan nilai lama jika tidak dikirim
-                'icon'        => $request->icon ?? $category->icon,
+                'color'       => $request->color ?? $category->color ?? '#6c757d',
+                'icon'        => $request->icon ?? $category->icon ?? $defaultIcon,
                 'status'      => $request->has('status')
                     ? $request->boolean('status')
                     : $category->status,
