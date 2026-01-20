@@ -7,6 +7,7 @@ use App\Http\Requests\EditCategoryRequest;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
@@ -54,45 +55,37 @@ class CategoryController extends Controller
     public function store(CreateCategoryRequest $request)
     {
         try {
-            $exists = Category::byUser()
-                ->where('name', $request->name)
-                ->exists();
+            // Ambil data validasi (sudah ada user_id, default, unique check)
+            $data = $request->validated();
 
-            if ($exists) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Category name already exists'
-                ], 422);
+            // Jaga-jaga: set default icon kalau kosong
+            if (empty($data['icon'])) {
+                $data['icon'] = match ($data['type']) {
+                    'income'   => 'fas fa-money-bill-wave',
+                    'expense'  => 'fas fa-shopping-cart',
+                    'transfer' => 'fas fa-exchange-alt',
+                    default    => 'fas fa-tag',
+                };
             }
 
-            // Set default icon based on type if not provided
-            $defaultIcon = match($request->type) {
-                'income' => 'fas fa-money-bill-wave',
-                'expense' => 'fas fa-shopping-cart',
-                'transfer' => 'fas fa-exchange-alt',
-                default => 'fas fa-tag',
-            };
-
-            $category = Category::create([
-                'user_id'     => Auth::id(),
-                'name'        => $request->name,
-                'type'        => $request->type,
-                'description' => $request->description ?? null,
-                'color'       => $request->color ?? '#6c757d',
-                'icon'        => $request->icon ?? $defaultIcon,
-                'status'      => true,
-            ]);
+            $category = Category::create($data);
 
             return response()->json([
                 'success' => true,
-                'data' => $category,
+                'data'    => $category,
                 'message' => 'Category created successfully'
             ], 201);
-        } catch (\Exception $e) {
+
+        } catch (\Throwable $e) {
+            Log::error('Create Category Failed', [
+                'user_id' => Auth::id(),
+                'request' => $request->except(['_token']),
+                'error'   => $e->getMessage(),
+            ]);
+
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create category',
-                'error' => $e->getMessage()
+                'message' => 'Failed to create category'
             ], 500);
         }
     }
