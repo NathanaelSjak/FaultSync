@@ -5,6 +5,7 @@ use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,7 +14,7 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 Route::get('/', function () {
-    if (auth()->check()) {
+    if (Auth::check()) {
         return redirect('/dashboard');
     }
     return redirect('/login');
@@ -55,9 +56,7 @@ Route::middleware('auth')->group(function() {
     | Dashboard Routes
     |--------------------------------------------------------------------------
     */
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/dashboard/summary', [DashboardController::class, 'summary'])->name('dashboard.summary');
     Route::get('/dashboard/account/{accountId}/balance', [DashboardController::class, 'accountBalance'])->name('dashboard.account.balance');

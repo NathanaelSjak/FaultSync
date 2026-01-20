@@ -4,7 +4,7 @@
 @section('page-title', 'Dashboard')
 
 @section('content')
-<div class="container mx-auto">
+<div class="max-w-7xl mx-auto space-y-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
     <!-- Summary Cards -->
