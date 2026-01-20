@@ -181,7 +181,7 @@
     <div class="@auth ml-64 @endauth min-h-screen main-content">
         @auth
         {{-- Top Navbar --}}
-        <header class="bg-white shadow-sm sticky top-0 z-40 border-b">
+        <header class="bg-white/90 backdrop-blur shadow-lg sticky top-0 z-40 border-b border-gray-200">
             <div class="px-4 md:px-6 py-4">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-4">
