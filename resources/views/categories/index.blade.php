@@ -88,6 +88,7 @@
                                 <option value="fas fa-heart">❤️ Kesehatan</option>
                                 <option value="fas fa-graduation-cap">🎓 Pendidikan</option>
                                 <option value="fas fa-film">🎬 Hiburan</option>
+                                <option value="fas fa-soccer">⚽ Olahraga</option>
                                 <option value="fas fa-file-invoice">📄 Tagihan</option>
                                 <option value="fas fa-chart-line">📈 Investasi</option>
                                 <option value="fas fa-gift">🎁 Hadiah</option>
