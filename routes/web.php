@@ -9,11 +9,6 @@ use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Home Route
-|--------------------------------------------------------------------------
-*/
 Route::get('/', function () {
     if (Auth::check()) {
         return redirect('/dashboard');
@@ -21,11 +16,6 @@ Route::get('/', function () {
     return redirect('/login');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Authentication Routes (Views)
-|--------------------------------------------------------------------------
-*/
 Route::get('/login', function () {
     return view('auth.login');
 })->name('login')->middleware('guest');
@@ -34,44 +24,22 @@ Route::get('/register', function () {
     return view('auth.register');
 })->name('register')->middleware('guest');
 
-/*
-|--------------------------------------------------------------------------
-| Authentication API Routes
-|--------------------------------------------------------------------------
-*/
 Route::prefix('auth')->name('auth.')->group(function() {
     Route::post('/register', [AuthController::class, 'register'])->name('register');
     Route::post('/login', [AuthController::class, 'login'])->name('login');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 });
 
-/*
-|--------------------------------------------------------------------------
-| Protected Routes (Require Authentication)
-|--------------------------------------------------------------------------
-*/
 Route::middleware('auth')->group(function() {
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Dashboard Routes
-    |--------------------------------------------------------------------------
-    */
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     
     Route::get('/dashboard/summary', [DashboardController::class, 'summary'])->name('dashboard.summary');
     Route::get('/dashboard/account/{accountId}/balance', [DashboardController::class, 'accountBalance'])->name('dashboard.account.balance');
     
-    /*
-    |--------------------------------------------------------------------------
-    | Bank Account Routes
-    |--------------------------------------------------------------------------
-    */
     Route::get('/bank-accounts', function () {
         return view('bank-accounts.index');
     })->name('bank-accounts.index');
     
-    // API routes for AJAX requests
     Route::prefix('api')->group(function() {
         Route::get('/bank-accounts', [BankAccountController::class, 'index']);
         Route::get('/bank-accounts/{id}', [BankAccountController::class, 'show']);
@@ -81,12 +49,6 @@ Route::middleware('auth')->group(function() {
     });
     
     Route::resource('bank-accounts', BankAccountController::class)->except(['index', 'create', 'edit', 'show', 'store', 'update', 'destroy']);
-    
-    /*
-    |--------------------------------------------------------------------------
-    | Category Routes
-    |--------------------------------------------------------------------------
-    */
     
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/api/categories', [CategoryController::class, 'list']);
@@ -114,16 +76,10 @@ Route::middleware('auth')->group(function() {
             ->where('type', 'income|expense|transfer');
     });
     
-    /*
-    |--------------------------------------------------------------------------
-    | Transaction Routes
-    |--------------------------------------------------------------------------
-    */
     Route::get('/transactions', function () {
         return view('transactions.index');
     })->name('transactions.index');
     
-    // API routes for AJAX requests
     Route::prefix('api')->group(function() {
         Route::get('/transactions', [TransactionController::class, 'index']);
         Route::get('/transactions/{id}', [TransactionController::class, 'show']);
@@ -134,11 +90,6 @@ Route::middleware('auth')->group(function() {
     
     Route::resource('transactions', TransactionController::class)->except(['index', 'create', 'edit', 'show', 'store', 'update', 'destroy']);
     
-    /*
-    |--------------------------------------------------------------------------
-    | User Profile Routes
-    |--------------------------------------------------------------------------
-    */
     Route::get('/profile', function () {
         return view('profile.index');
     })->name('profile.index');
@@ -151,9 +102,4 @@ Route::middleware('auth')->group(function() {
     
 });
 
-/*
-|--------------------------------------------------------------------------
-| Locale Routes
-|--------------------------------------------------------------------------
-*/
 Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');

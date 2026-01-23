@@ -6,10 +6,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'Bank App') - VaultSync</title>
     
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -31,7 +29,6 @@
             border-radius: 4px;
         }
         
-        /* Navigation container - vertical layout */
         nav {
             display: flex !important;
             flex-direction: column !important;
@@ -43,7 +40,6 @@
             gap: 4px;
         }
         
-        /* Sidebar link styling - horizontal items in vertical list */
         .sidebar-link {
             @apply flex items-center px-4 py-3 text-gray-700 rounded-lg transition-all duration-200 hover:bg-gray-100 w-full;
             display: flex !important;
@@ -84,7 +80,6 @@
                 margin-left: 0 !important;
             }
             
-            /* Overlay when sidebar is open */
             .sidebar.open::before {
                 content: '';
                 position: fixed;
@@ -97,7 +92,6 @@
             }
         }
         
-        /* Smooth transitions */
         * {
             transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
             transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);

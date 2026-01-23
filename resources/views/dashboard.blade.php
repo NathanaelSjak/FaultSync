@@ -7,7 +7,6 @@
 <div class="max-w-7xl mx-auto space-y-8">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">{{ __('messages.dashboard_title') }}</h1>
 
-    <!-- Summary Cards -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8" id="summaryCards">
         <div class="bg-white p-6 rounded-xl shadow-sm border">
             <div class="flex items-center justify-between">
@@ -46,7 +45,6 @@
         </div>
     </div>
 
-    <!-- Bank Accounts Summary -->
     <div class="bg-white rounded-xl shadow-sm border mb-8">
         <div class="p-6 border-b">
             <h2 class="text-xl font-semibold text-gray-800">{{ __('messages.dashboard_account_balance') }}</h2>
@@ -58,7 +56,6 @@
         </div>
     </div>
 
-    <!-- Recent Transactions -->
     <div class="bg-white rounded-xl shadow-sm border">
         <div class="p-6 border-b">
             <h2 class="text-xl font-semibold text-gray-800">{{ __('messages.dashboard_recent_transactions') }}</h2>
@@ -86,7 +83,6 @@
 
 @push('scripts')
 <script>
-// Translation helper for JavaScript
 const translations = {
     income: "{{ __('messages.transactions_income') }}",
     expense: "{{ __('messages.transactions_expense') }}",
@@ -108,12 +104,10 @@ function loadDashboard() {
             if (response.success) {
                 const data = response.data;
                 
-                // Update summary cards
                 $('#totalIncome').text(formatCurrency(data.total_income));
                 $('#totalExpense').text(formatCurrency(data.total_expense));
                 $('#netBalance').text(formatCurrency(data.net_balance));
                 
-                // Update bank accounts
                 let accountsHtml = '';
                 if (data.bank_accounts.length > 0) {
                     data.bank_accounts.forEach(account => {
@@ -136,7 +130,6 @@ function loadDashboard() {
                 }
                 $('#bankAccountsList').html(accountsHtml);
                 
-                // Update recent transactions
                 let transactionsHtml = '';
                 if (data.recent_transactions.length > 0) {
                     data.recent_transactions.forEach(transaction => {
