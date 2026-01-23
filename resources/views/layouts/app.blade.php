@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Bank App') - FaultSync</title>
+    <title>@yield('title', 'Bank App') - VaultSync</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -177,7 +177,7 @@
     @endauth
 
     @auth
-    <header class="fixed top-0 right-0 left-0 @auth left-64 @endauth bg-white/90 backdrop-blur shadow-lg border-b border-gray-200 z-40">
+    <header class="fixed top-0 right-0 left-0 md:left-64 bg-white/90 backdrop-blur shadow-lg border-b border-gray-200 z-40">
         <div class="px-4 md:px-6 py-4">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-4">
@@ -210,7 +210,7 @@
     </header>
     @endauth
 
-    <div class="flex-1 flex flex-col ml-64 mt-20">
+    <div class="flex-1 flex flex-col ml-0 md:ml-64 mt-20">
         <main class="flex-1 overflow-y-auto p-6">
             @if(session('success'))
                 <div class="alert-message mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">

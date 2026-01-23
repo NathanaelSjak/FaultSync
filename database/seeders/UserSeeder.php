@@ -17,7 +17,7 @@ class UserSeeder extends Seeder
         $users = [
             [
                 'name' => 'Admin User',
-                'email' => 'admin@faultsync.com',
+                'email' => 'admin@vaultsync.com',
                 'password' => Hash::make('password123'),
             ],
             [

@@ -1,59 +1,150 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+## Installation Guide
+1. Install **Docker** on your host machine
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+    For **Windows Users**, follow the installation guide for Docker Desktop [here](https://docs.docker.com/desktop/setup/install/windows-install/).
 
-## About Laravel
+    For **Mac Users**, follow the installation guide for Docker Desktop [here](https://docs.docker.com/desktop/setup/install/mac-install/)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+    For **Linux Users**, follow the installation guide for Docker [here](https://docs.docker.com/engine/install/ubuntu/)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+2. Once Docker is all set up (if you are using Docker Desktop, make sure it is running in the background), head to the root of this project, and run the following command,
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+    ```
+    docker compose up --build -d
+    ```
 
-## Learning Laravel
+    This will migrate and run the Laravel, Nginx, and Database applications.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+3. The web application will run on your local machine at **port 8000**
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+    ```
+    localhost:8000
+    ```
 
-## Laravel Sponsors
+ > Note: Since this is a school project, any environment variable was shared, however, we have made sure to not publish any sensitive information
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Overview of the Website
 
-### Premium Partners
+1. **Login Page**
+    
+    The login page consists of two basic part, the form to provide your user credentials to access the application's main features, and a language switch between Bahasa Indonesia (ID) and English (EN); do note that all pages will have this language switch feature.
+    
+    This page is accessible as a landing page, as a redirect from the register page, and as the default redirect after logging out.
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+    ![Login Page](/images/desktop/login-page.png)
 
-## Contributing
+2. **Register Page**
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+    The register page requires the user's name, email, password, and confirm password as its input.
 
-## Code of Conduct
+    Once the user is registered, they will be automatically logged in.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+    This page is accessible from the login page.
 
-## Security Vulnerabilities
+    ![Register Page](/images/desktop/register-page.png)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+3. **Side Bar**
 
-## License
+    The side bar only shows up for authenticated users.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+    The side bar consists of all menu accessible by a properly authenticated user.
+
+    It also allows the user to log out using the button near their profile on the bottom.
+
+    ![Side Bar](/images/desktop/side-bar.png)
+
+4. **Header**
+
+    This header only shows up for authenticated users.
+
+    The header shows what page the user is currently in and the language switch.
+
+    ![Header](/images/desktop/header.png)
+
+5. **Dashboard**
+
+    The dashboard shows a user's total income, total expenses, and net balance (total income - total expenses).
+
+    The dashboard will also show the balance of each bank account the user has.
+
+    Lastly, it will show the user's recent transaction histories.
+
+    ![Dashboard](/images/desktop/dashboard.png)
+
+    ![Dashboard Mobile](/images/mobile/image.png)
+
+6. **Bank Account**
+
+    When the user first enters the Bank Account menu, a list of the user's bank accounts will be shown.
+
+    ![Bank Account List](/images/desktop/bank-account-list.png)
+    
+    ![Bank Account Mobile](/images/mobile/bank-account.png)
+
+    The user could create a new bank account by clicking the top right create bank account button, it will then ask for the bank's name, the account's number, the type, and the optional description.
+    
+    ![Bank Account Create](/images/desktop/bank-account-create.png)
+
+    The user could also edit a bank account by clicking the edit icon next to the bank account you want to edit, it will then show a similar form as the create one, but with pre-filled inputs
+
+    ![alt text](/images/desktop/bank-account-edit.png)
+
+    The user could also delete a bank account by clicking the delete icon next to the account they want to delete.
+
+7. **Categories**
+
+    When the user first enters the Categories menu, a list of the categories the user has made will be shown.
+
+    ![Category List](/images/desktop/category-list.png)
+
+    ![Category Mobile](/images/mobile/category.png)
+
+    The user can filter their categories using either the search bar or the type (Income/Expense) dropdown, and then pressing apply.
+
+    ![Filtered Category List](/images/desktop/filtered-category-list.png)
+
+    The user can create a new category by clicking the create category button on the top right, it will then show a form that asks for the category name, type (income/expense), icon, color, and description.
+
+    ![Category Create](/images/desktop/category-create.png)
+
+    The user can edit a category by clicking the edit icon on the category card they want to edit, it will then show a form similar to the create one, but with pre-filled inputs.
+
+    ![Category Edit](/images/desktop/category-edit.png)
+
+    The user can also delete a category by clicking the delete icon on the category card they want to delete.
+
+8. **Transactions**
+
+    When the user first enters the Transactions menu, a list of the transactions the user has made will be shown.
+
+    ![Transaction List](/images/desktop/transaction-list.png)
+
+    ![Transaction Mobile](/images/mobile/transaction.png)
+
+    The user can filter their transactions by account and/or category and/or date range, and then pressing apply. They can also press cancel to remove any filter.
+
+    ![Filtered Transaction List](/images/desktop/filtered-transaction-list.png)
+
+    The user can create a new transaction by clicking the create transaction button on the top right, it will then show a form that asks for the account, category, type (income/expense), amount, date, and description.
+
+    ![Transaction Create](/images/desktop/transaction-create.png)
+
+    The user can edit a transaction by clicking the edit icon on the transaction they want to edit, it will then show a form similar to the create one, but with pre-filled inputs.
+
+    ![Transaction Edit](/images/desktop/transaction-edit.png)
+
+    The user can also delete a transaction by clicking the delete icon on the transaction they want to delete.
+
+9. **Profile**
+
+    When the user enters the Profile menu, the user can update their profile, which includes their name, email, and password.
+
+    To update their password, the user must confirm their new password as well.
+
+    ![Profile](/images/desktop/profile.png)
+
+    ![Profile Mobile](/images/mobile/profile.png)
+
+    However, the user is also allowed to delete their own account, but this will only occur if the user confirms they want to delete their account by entering their current password to delete it.
+
+    ![Profile Delete](/images/desktop/profile-delete.png)
