@@ -13,7 +13,7 @@ class Category extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'type',        // income | expense
+        'type',
         'description',
         'color',
         'icon',
@@ -33,11 +33,6 @@ class Category extends Model
         'icon' => 'fas fa-folder',
     ];
 
-    /*
-    |--------------------------------------------------------------------------
-    | Relationships
-    |--------------------------------------------------------------------------
-    */
 
     public function user()
     {
@@ -48,12 +43,6 @@ class Category extends Model
     {
         return $this->hasMany(Transaction::class);
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Query Scopes
-    |--------------------------------------------------------------------------
-    */
 
     public function scopeByUser($query, $userId = null)
     {
@@ -82,12 +71,6 @@ class Category extends Model
               ->orWhere('description', 'LIKE', "%{$keyword}%");
         });
     }
-
-    /*
-    |--------------------------------------------------------------------------
-    | Accessors (for UI)
-    |--------------------------------------------------------------------------
-    */
 
     public function getTypeLabelAttribute()
     {
