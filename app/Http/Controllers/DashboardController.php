@@ -20,7 +20,6 @@ class DashboardController extends Controller
         try {
             $userId = Auth::id();
 
-            // Get all bank accounts with balances
             $bankAccounts = BankAccount::where('user_id', $userId)
                 ->with(['transactions' => function($query) {
                     $query->select('bank_account_id', 'type', DB::raw('SUM(amount) as total'))
@@ -47,7 +46,6 @@ class DashboardController extends Controller
                     ];
                 });
 
-            // Global totals
             $totalIncome = Transaction::where('user_id', $userId)
                 ->where('type', 'income')
                 ->sum('amount');
@@ -56,7 +54,6 @@ class DashboardController extends Controller
                 ->where('type', 'expense')
                 ->sum('amount');
 
-            // Combined transaction history
             $transactions = Transaction::where('user_id', $userId)
                 ->with(['bankAccount', 'category'])
                 ->orderBy('date', 'desc')

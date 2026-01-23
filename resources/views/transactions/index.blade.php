@@ -1,15 +1,15 @@
 @extends('layouts.app')
 
-@section('title', 'Transaksi')
-@section('page-title', 'Manajemen Transaksi')
+@section('title', __('messages.transactions_title'))
+@section('page-title', __('messages.transactions_manage'))
 
 @section('content')
 <div class="container mx-auto">
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Transaksi</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ __('messages.transactions_title') }}</h1>
         <button onclick="openCreateModal()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
             <i class="fas fa-plus mr-2"></i>
-            Tambah Transaksi
+            {{ __('messages.transactions_add') }}
         </button>
     </div>
 
@@ -17,32 +17,32 @@
     <div class="bg-white rounded-xl shadow-sm border p-4 mb-6">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Akun Bank</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_account') }}</label>
                 <select id="filterAccount" class="w-full px-3 py-2 border rounded-lg">
-                    <option value="">Semua Akun</option>
+                    <option value="">{{ __('messages.categories_all_types') }}</option>
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_category') }}</label>
                 <select id="filterCategory" class="w-full px-3 py-2 border rounded-lg">
-                    <option value="">Semua Kategori</option>
+                    <option value="">{{ __('messages.categories_all_types') }}</option>
                 </select>
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Mulai</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.filter_start_date') }}</label>
                 <input type="date" id="filterStartDate" class="w-full px-3 py-2 border rounded-lg">
             </div>
             <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Akhir</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.filter_end_date') }}</label>
                 <input type="date" id="filterEndDate" class="w-full px-3 py-2 border rounded-lg">
             </div>
         </div>
         <div class="mt-4">
             <button onclick="applyFilters()" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-                Terapkan Filter
+                {{ __('messages.categories_apply') }}
             </button>
             <button onclick="resetFilters()" class="ml-2 bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg">
-                Reset
+                {{ __('messages.button_cancel') }}
             </button>
         </div>
     </div>
@@ -52,18 +52,18 @@
             <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                     <tr>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tanggal</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Akun</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Kategori</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tipe</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Jumlah</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Deskripsi</th>
-                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Aksi</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_date') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_account') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_category') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_type') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_amount') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_description') }}</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">{{ __('messages.table_actions') }}</th>
                     </tr>
                 </thead>
                 <tbody id="transactionsTable" class="bg-white divide-y divide-gray-200">
                     <tr>
-                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">Memuat data...</td>
+                        <td colspan="7" class="px-6 py-8 text-center text-gray-500">{{ __('messages.dashboard_loading') }}</td>
                     </tr>
                 </tbody>
             </table>
@@ -75,7 +75,7 @@
 <div id="transactionModal" class="modal-overlay hidden">
     <div class="modal-content w-full max-w-md">
         <div class="p-6">
-            <h3 class="text-lg font-semibold text-gray-800 mb-4" id="modalTitle">Tambah Transaksi</h3>
+            <h3 class="text-lg font-semibold text-gray-800 mb-4" id="modalTitle">{{ __('messages.transactions_add_modal') }}</h3>
             
             <form id="transactionForm">
                 @csrf
@@ -83,49 +83,49 @@
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Akun Bank</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_account') }}</label>
                         <select name="bank_account_id" id="transactionAccount" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option value="">Pilih Akun Bank</option>
+                            <option value="">{{ __('messages.transactions_select_account') }}</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kategori</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_category') }}</label>
                         <select name="category_id" id="transactionCategory" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                            <option value="">Pilih Kategori (Opsional)</option>
+                            <option value="">{{ __('messages.transactions_select_category') }}</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tipe</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_type') }}</label>
                         <select name="type" id="transactionType" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
-                            <option value="income">Pemasukan</option>
-                            <option value="expense">Pengeluaran</option>
+                            <option value="income">{{ __('messages.transactions_income') }}</option>
+                            <option value="expense">{{ __('messages.transactions_expense') }}</option>
                         </select>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_amount') }}</label>
                         <input type="number" step="0.01" name="amount" id="transactionAmount" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.table_date') }}</label>
                         <input type="date" name="date" id="transactionDate" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
                     </div>
                     
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Deskripsi (Opsional)</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">{{ __('messages.label_description') }}</label>
                         <textarea name="description" id="transactionDescription" class="w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" rows="3"></textarea>
                     </div>
                 </div>
                 
                 <div class="flex justify-end space-x-3 mt-6">
                     <button type="button" onclick="closeModal()" class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                        Batal
+                        {{ __('messages.button_cancel') }}
                     </button>
                     <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600">
-                        Simpan
+                        {{ __('messages.button_save') }}
                     </button>
                 </div>
             </form>
@@ -135,6 +135,19 @@
 
 @push('scripts')
 <script>
+// Translation helper for JavaScript
+const translations = {
+    income: "{{ __('messages.transactions_income') }}",
+    expense: "{{ __('messages.transactions_expense') }}",
+    deleteConfirm: "{{ __('messages.transaction_delete_confirm') }}",
+    deleteSuccess: "{{ __('messages.transaction_deleted_successfully') }}",
+    deleteError: "{{ __('messages.transaction_delete_error') }}",
+    selectAccount: "{{ __('messages.transactions_select_account') }}",
+    selectCategory: "{{ __('messages.select_category_optional') }}",
+    allAccounts: "{{ __('messages.filter_all_accounts') }}",
+    allCategories: "{{ __('messages.filter_all_categories') }}"
+};
+
 $(document).ready(function() {
     loadTransactions();
     loadBankAccounts();
@@ -158,12 +171,12 @@ function loadBankAccounts() {
         },
         success: function(response) {
             if (response.success) {
-                let options = '<option value="">Pilih Akun Bank</option>';
+                let options = '<option value="">' + translations.selectAccount + '</option>';
                 response.data.forEach(account => {
                     options += `<option value="${account.id}">${account.bank_name} - ${account.account_number}</option>`;
                 });
                 $('#transactionAccount').html(options);
-                $('#filterAccount').html('<option value="">Semua Akun</option>' + response.data.map(a => `<option value="${a.id}">${a.bank_name} - ${a.account_number}</option>`).join(''));
+                $('#filterAccount').html('<option value="">' + translations.allAccounts + '</option>' + response.data.map(a => `<option value="${a.id}">${a.bank_name} - ${a.account_number}</option>`).join(''));
             }
         },
         error: function(xhr) {
@@ -181,12 +194,12 @@ function loadCategories() {
         },
         success: function(response) {
             if (response.success) {
-                let options = '<option value="">Pilih Kategori (Opsional)</option>';
+                let options = '<option value="">' + translations.selectCategory + '</option>';
                 response.data.forEach(category => {
                     options += `<option value="${category.id}">${category.name} (${category.type})</option>`;
                 });
                 $('#transactionCategory').html(options);
-                $('#filterCategory').html('<option value="">Semua Kategori</option>' + response.data.map(c => `<option value="${c.id}">${c.name}</option>`).join(''));
+                $('#filterCategory').html('<option value="">' + translations.allCategories + '</option>' + response.data.map(c => `<option value="${c.id}">${c.name}</option>`).join(''));
             }
         },
         error: function(xhr) {
@@ -221,7 +234,7 @@ function loadTransactions() {
                                 <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${transaction.category ? transaction.category.name : '-'}</td>
                                 <td class="px-6 py-4 whitespace-nowrap">
                                     <span class="px-2 py-1 text-xs font-medium rounded-full ${transaction.type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}">
-                                        ${transaction.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+                                        ${transaction.type === 'income' ? translations.income : translations.expense}
                                     </span>
                                 </td>
                                 <td class="px-6 py-4 whitespace-nowrap text-sm font-semibold ${typeClass}">
@@ -240,14 +253,14 @@ function loadTransactions() {
                         `;
                     });
                 } else {
-                    html = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-500">Belum ada transaksi</td></tr>';
+                    html = '<tr><td colspan="7" class="px-6 py-8 text-center text-gray-500">{{ __("messages.no_transactions") }}</td></tr>';
                 }
                 $('#transactionsTable').html(html);
             }
         },
         error: function(xhr) {
             console.error('Error loading transactions:', xhr);
-            $('#transactionsTable').html('<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">Error memuat data. Silakan refresh halaman.</td></tr>');
+            $('#transactionsTable').html('<tr><td colspan="7" class="px-6 py-8 text-center text-red-500">{{ __("messages.error_loading_data") }}</td></tr>');
         }
     });
 }
@@ -270,7 +283,7 @@ function formatDate(dateString) {
 }
 
 function openCreateModal() {
-    $('#modalTitle').text('Tambah Transaksi');
+    $('#modalTitle').text("{{ __('messages.transactions_add_modal') }}");
     $('#transactionForm')[0].reset();
     $('#transactionId').val('');
     $('#transactionDate').val(new Date().toISOString().split('T')[0]);
@@ -291,7 +304,7 @@ function editTransaction(id) {
         success: function(response) {
             if (response.success) {
                 const transaction = response.data;
-                $('#modalTitle').text('Edit Transaksi');
+                $('#modalTitle').text("{{ __('messages.transactions_edit_modal') }}");
                 $('#transactionId').val(transaction.id);
                 $('#transactionAccount').val(transaction.bank_account_id);
                 $('#transactionCategory').val(transaction.category_id || '');
@@ -304,7 +317,7 @@ function editTransaction(id) {
         },
         error: function(xhr) {
             console.error('Error loading transaction:', xhr);
-            alert('Terjadi kesalahan saat memuat data transaksi');
+            alert("{{ __('messages.transaction_load_error') }}");
         }
     });
 }
@@ -325,21 +338,21 @@ function saveTransaction() {
             if (response.success) {
                 closeModal();
                 loadTransactions();
-                alert('Transaksi berhasil disimpan');
+                alert("{{ __('messages.transaction_saved_successfully') }}");
             }
         },
         error: function(xhr) {
             if (xhr.responseJSON && xhr.responseJSON.errors) {
                 alert('Error: ' + Object.values(xhr.responseJSON.errors).flat().join(', '));
             } else {
-                alert('Terjadi kesalahan saat menyimpan');
+                alert("{{ __('messages.transaction_save_error') }}");
             }
         }
     });
 }
 
 function deleteTransaction(id) {
-    if (!confirm('Apakah Anda yakin ingin menghapus transaksi ini?')) {
+    if (!confirm(translations.deleteConfirm)) {
         return;
     }
     
@@ -352,14 +365,14 @@ function deleteTransaction(id) {
         success: function(response) {
             if (response.success) {
                 loadTransactions();
-                alert('Transaksi berhasil dihapus');
+                alert(translations.deleteSuccess);
             }
         },
         error: function(xhr) {
             if (xhr.responseJSON) {
-                alert(xhr.responseJSON.message || 'Terjadi kesalahan saat menghapus');
+                alert(xhr.responseJSON.message || translations.deleteError);
             } else {
-                alert('Terjadi kesalahan saat menghapus');
+                alert(translations.deleteError);
             }
         }
     });

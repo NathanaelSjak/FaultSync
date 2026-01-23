@@ -115,16 +115,15 @@
     
     @stack('styles')
 </head>
-<body class="h-full bg-gray-50">
+<body class="h-screen flex flex-col bg-gray-50">
     @auth
-    {{-- Sidebar --}}
-    <aside class="sidebar fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 flex flex-col">
+    <aside class="sidebar fixed left-0 top-0 h-screen w-64 bg-white shadow-lg z-50 flex flex-col">
         <div class="p-6 border-b">
             <a href="/dashboard" class="flex items-center space-x-3 hover:opacity-80 transition-opacity">
                 <div class="w-10 h-10 bg-blue-500 rounded-lg flex items-center justify-center">
                     <i class="fas fa-university text-white text-lg"></i>
                 </div>
-                <h1 class="text-xl font-bold text-gray-800">FaultSync</h1>
+                <h1 class="text-xl font-bold text-gray-800">{{ __('messages.app_name') }}</h1>
             </a>
         </div>
         
@@ -132,27 +131,27 @@
             <div class="px-4 space-y-1">
                 <a href="/dashboard" class="sidebar-link {{ request()->is('dashboard') || request()->is('/') ? 'active' : '' }}">
                     <i class="fas fa-tachometer-alt mr-3"></i>
-                    <span>Dashboard</span>
+                    <span>{{ __('messages.sidebar_dashboard') }}</span>
                 </a>
                 
                 <a href="/bank-accounts" class="sidebar-link {{ request()->is('bank-accounts*') ? 'active' : '' }}">
                     <i class="fas fa-university mr-3"></i>
-                    <span>Akun Bank</span>
+                    <span>{{ __('messages.sidebar_bank_accounts') }}</span>
                 </a>
                 
                 <a href="/categories" class="sidebar-link {{ request()->is('categories*') ? 'active' : '' }}">
                     <i class="fas fa-tags mr-3"></i>
-                    <span>Kategori</span>
+                    <span>{{ __('messages.sidebar_categories') }}</span>
                 </a>
                 
                 <a href="/transactions" class="sidebar-link {{ request()->is('transactions*') ? 'active' : '' }}">
                     <i class="fas fa-exchange-alt mr-3"></i>
-                    <span>Transaksi</span>
+                    <span>{{ __('messages.sidebar_transactions') }}</span>
                 </a>
                 
                 <a href="/profile" class="sidebar-link {{ request()->is('profile*') ? 'active' : '' }}">
                     <i class="fas fa-user mr-3"></i>
-                    <span>Profil</span>
+                    <span>{{ __('messages.sidebar_profile') }}</span>
                 </a>
             </div>
         </nav>
@@ -168,7 +167,7 @@
                 </div>
                 <form id="logoutForm" action="/auth/logout" method="POST" class="inline">
                     @csrf
-                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="Logout">
+                    <button type="submit" class="text-gray-400 hover:text-red-500 transition-colors" title="{{ __('messages.sidebar_logout') }}">
                         <i class="fas fa-sign-out-alt"></i>
                     </button>
                 </form>
@@ -177,46 +176,44 @@
     </aside>
     @endauth
 
-    {{-- Main Content --}}
-    <div class="@auth ml-64 @endauth min-h-screen main-content">
-        @auth
-        {{-- Top Navbar --}}
-        <header class="bg-white/90 backdrop-blur shadow-lg sticky top-0 z-40 border-b border-gray-200">
-            <div class="px-4 md:px-6 py-4">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center space-x-4">
-                        <button id="mobileMenuToggle" class="md:hidden text-gray-600 hover:text-gray-800 focus:outline-none">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                        <div>
-                            <h2 class="text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
-                            @hasSection('breadcrumb')
-                            <nav class="flex items-center space-x-2 text-sm text-gray-500 mt-1">
-                                <a href="/dashboard" class="hover:text-blue-500 transition-colors">Dashboard</a>
-                                <i class="fas fa-chevron-right text-xs"></i>
-                                <span class="text-gray-700">@yield('breadcrumb')</span>
-                            </nav>
-                            @endif
-                        </div>
+    @auth
+    <header class="fixed top-0 right-0 left-0 @auth left-64 @endauth bg-white/90 backdrop-blur shadow-lg border-b border-gray-200 z-40">
+        <div class="px-4 md:px-6 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <button id="mobileMenuToggle" class="md:hidden text-gray-600 hover:text-gray-800 focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800">@yield('page-title', 'Dashboard')</h2>
+                        @hasSection('breadcrumb')
+                        <nav class="flex items-center space-x-2 text-sm text-gray-500 mt-1">
+                            <a href="/dashboard" class="hover:text-blue-500 transition-colors">Dashboard</a>
+                            <i class="fas fa-chevron-right text-xs"></i>
+                            <span class="text-gray-700">@yield('breadcrumb')</span>
+                        </nav>
+                        @endif
                     </div>
-                    <div class="hidden md:flex items-center space-x-4">
-                        <div class="text-right">
-                            <p class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</p>
-                            <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
-                        </div>
-                        <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
-                            <span class="text-white text-sm font-semibold">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
-                        </div>
+                </div>
+                <div class="hidden md:flex items-center space-x-6">
+                    <x-language-switcher />
+                    <div class="text-right">
+                        <p class="text-sm font-medium text-gray-700">{{ Auth::user()->name }}</p>
+                        <p class="text-xs text-gray-500">{{ Auth::user()->email }}</p>
+                    </div>
+                    <div class="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+                        <span class="text-white text-sm font-semibold">{{ strtoupper(substr(Auth::user()->name, 0, 2)) }}</span>
                     </div>
                 </div>
             </div>
-        </header>
-        @endauth
+        </div>
+    </header>
+    @endauth
 
-        {{-- Page Content --}}
-        <main class="p-6">
+    <div class="flex-1 flex flex-col ml-64 mt-20">
+        <main class="flex-1 overflow-y-auto p-6">
             @if(session('success'))
-                <div class="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
+                <div class="alert-message mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center justify-between">
                     <div class="flex items-center">
                         <i class="fas fa-check-circle text-green-500 mr-3"></i>
                         <span class="text-green-700">{{ session('success') }}</span>
@@ -228,7 +225,7 @@
             @endif
             
             @if(session('error'))
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
+                <div class="alert-message mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center justify-between">
                     <div class="flex items-center">
                         <i class="fas fa-exclamation-circle text-red-500 mr-3"></i>
                         <span class="text-red-700">{{ session('error') }}</span>
@@ -240,7 +237,7 @@
             @endif
             
             @if(isset($errors) && $errors->any())
-                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                <div class="alert-message mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
                     <div class="flex items-center mb-2">
                         <i class="fas fa-exclamation-triangle text-red-500 mr-2"></i>
                         <h4 class="text-red-700 font-semibold">Validation Errors</h4>
@@ -257,11 +254,9 @@
         </main>
     </div>
 
-    <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <script>
-        // Mobile menu toggle
         document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
             const sidebar = document.querySelector('.sidebar');
             if (sidebar) {
@@ -269,7 +264,6 @@
             }
         });
 
-        // Close sidebar when clicking outside on mobile
         document.addEventListener('click', function(event) {
             const sidebar = document.querySelector('.sidebar');
             const toggle = document.getElementById('mobileMenuToggle');
@@ -281,12 +275,14 @@
             }
         });
 
-        // Handle logout form submission
         document.getElementById('logoutForm')?.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const form = this;
             const formData = new FormData(form);
+            
+            const logoutError = "{{ __('messages.logout_error') }}";
+            const logoutFailed = "{{ __('messages.logout_failed') }}";
             
             fetch(form.action, {
                 method: 'POST',
@@ -301,19 +297,17 @@
                 if (data.success) {
                     window.location.href = '/login';
                 } else {
-                    alert('Gagal logout: ' + (data.message || 'Terjadi kesalahan'));
+                    alert(logoutFailed + ': ' + (data.message || logoutError));
                 }
             })
             .catch(error => {
                 console.error('Logout error:', error);
-                // Fallback: redirect anyway
                 window.location.href = '/login';
             });
         });
 
-        // Auto-hide alerts after 5 seconds
         setTimeout(() => {
-            const alerts = document.querySelectorAll('[class*="bg-green-50"], [class*="bg-red-50"]');
+            const alerts = document.querySelectorAll('.alert-message');
             alerts.forEach(alert => {
                 alert.style.transition = 'opacity 0.5s';
                 alert.style.opacity = '0';
@@ -321,7 +315,6 @@
             });
         }, 5000);
 
-        // Sidebar scroll behavior
         window.addEventListener('resize', function() {
             const sidebar = document.querySelector('.sidebar');
             if (window.innerWidth >= 768 && sidebar) {

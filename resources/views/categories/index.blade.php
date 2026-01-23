@@ -1,53 +1,49 @@
 @extends('layouts.app')
 
-@section('title', 'Kategori')
-@section('page-title', 'Manajemen Kategori')
+@section('title', __('messages.categories_title'))
+@section('page-title', __('messages.categories_manage'))
 
 @section('content')
 <div class="container mx-auto px-4">
 
-    {{-- Header --}}
     <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Kategori</h1>
+        <h1 class="text-2xl font-bold text-gray-800">{{ __('messages.categories_title') }}</h1>
         <button onclick="openCreateModal()"
             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center">
             <i class="fas fa-plus mr-2"></i>
-            Tambah Kategori
+            {{ __('messages.categories_add') }}
         </button>
     </div>
 
-    {{-- Filter --}}
     <div class="bg-white rounded-xl shadow-sm border p-4 mb-6
                 flex flex-col md:flex-row md:items-center gap-4">
         <select id="filterType" class="px-3 py-2 border rounded-lg">
-            <option value="">Semua Tipe</option>
-            <option value="income">Pemasukan</option>
-            <option value="expense">Pengeluaran</option>
+            <option value="">{{ __('messages.categories_all_types') }}</option>
+            <option value="income">{{ __('messages.categories_income') }}</option>
+            <option value="expense">{{ __('messages.categories_expense') }}</option>
         </select>
 
         <input type="text" id="searchCategory"
-            placeholder="Cari kategori..."
+            placeholder="{{ __('messages.categories_search') }}"
             class="px-3 py-2 border rounded-lg w-full md:w-64">
 
         <button onclick="loadCategories()"
             class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg">
-            Terapkan
+            {{ __('messages.categories_apply') }}
         </button>
     </div>
 
-    {{-- Category Grid --}}
     <div id="categoryGrid"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <p class="text-gray-500 col-span-full text-center">Memuat data...</p>
+        <p class="text-gray-500 col-span-full text-center">{{ __('messages.loading') }}</p>
     </div>
 </div>
 
-{{-- Modal --}}
 <div id="categoryModal" class="modal-overlay hidden">
     <div class="modal-content w-full max-w-md">
         <div class="p-6">
             <h3 class="text-lg font-semibold text-gray-800 mb-4" id="modalTitle">
-                Tambah Kategori
+                {{ __('messages.category_title_add') }}
             </h3>
 
             <form id="categoryForm">
@@ -56,45 +52,45 @@
 
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm font-medium mb-1">Nama</label>
+                        <label class="block text-sm font-medium mb-1">{{ __('messages.label_category_name') }}</label>
                         <input type="text" id="categoryName" required
                             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1">Tipe</label>
+                        <label class="block text-sm font-medium mb-1">{{ __('messages.label_category_type') }}</label>
                         <select id="categoryType" required
                             class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500">
-                            <option value="income">Pemasukan</option>
-                            <option value="expense">Pengeluaran</option>
+                            <option value="income">{{ __('messages.categories_income') }}</option>
+                            <option value="expense">{{ __('messages.categories_expense') }}</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1">Icon</label>
+                        <label class="block text-sm font-medium mb-1">{{ __('messages.label_category_icon') }}</label>
                         <div class="relative">
                             <select id="categoryIcon" required
                                 class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 appearance-none">
-                                <option value="fas fa-tag">🏷️ Tag</option>
-                                <option value="fas fa-money-bill-wave">💰 Uang</option>
-                                <option value="fas fa-wallet">💳 Dompet</option>
-                                <option value="fas fa-coins">🪙 Koin</option>
-                                <option value="fas fa-piggy-bank">🐷 Celengan</option>
-                                <option value="fas fa-credit-card">💳 Kartu Kredit</option>
-                                <option value="fas fa-shopping-cart">🛒 Belanja</option>
-                                <option value="fas fa-utensils">🍴 Makanan</option>
-                                <option value="fas fa-car">🚗 Mobil</option>
-                                <option value="fas fa-home">🏠 Rumah</option>
-                                <option value="fas fa-heart">❤️ Kesehatan</option>
-                                <option value="fas fa-graduation-cap">🎓 Pendidikan</option>
-                                <option value="fas fa-film">🎬 Hiburan</option>
-                                <option value="fas fa-soccer">⚽ Olahraga</option>
-                                <option value="fas fa-file-invoice">📄 Tagihan</option>
-                                <option value="fas fa-chart-line">📈 Investasi</option>
-                                <option value="fas fa-gift">🎁 Hadiah</option>
-                                <option value="fas fa-laptop">💻 Freelance</option>
-                                <option value="fas fa-briefcase">💼 Pekerjaan</option>
-                                <option value="fas fa-exchange-alt">🔄 Transfer</option>
+                                <option value="fas fa-tag">Tag</option>
+                                <option value="fas fa-money-bill-wave">Uang</option>
+                                <option value="fas fa-wallet">Dompet</option>
+                                <option value="fas fa-coins">Koin</option>
+                                <option value="fas fa-piggy-bank">Celengan</option>
+                                <option value="fas fa-credit-card">Kartu Kredit</option>
+                                <option value="fas fa-shopping-cart">Belanja</option>
+                                <option value="fas fa-utensils">Makanan</option>
+                                <option value="fas fa-car">Mobil</option>
+                                <option value="fas fa-home">Rumah</option>
+                                <option value="fas fa-heart">Kesehatan</option>
+                                <option value="fas fa-graduation-cap">Pendidikan</option>
+                                <option value="fas fa-film">Hiburan</option>
+                                <option value="fas fa-soccer">Olahraga</option>
+                                <option value="fas fa-file-invoice">Tagihan</option>
+                                <option value="fas fa-chart-line">Investasi</option>
+                                <option value="fas fa-gift">Hadiah</option>
+                                <option value="fas fa-laptop">Freelance</option>
+                                <option value="fas fa-briefcase">Pekerjaan</option>
+                                <option value="fas fa-exchange-alt">Transfer</option>
                                 <option value="fas fa-ellipsis-h">⋯ Lainnya</option>
                             </select>
                             <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
@@ -104,13 +100,13 @@
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1">Warna</label>
+                        <label class="block text-sm font-medium mb-1">{{ __('messages.label_color') }}</label>
                         <input type="color" id="categoryColor" value="#6c757d"
                             class="w-full h-10 border rounded-lg">
                     </div>
 
                     <div>
-                        <label class="block text-sm font-medium mb-1">Deskripsi</label>
+                        <label class="block text-sm font-medium mb-1">{{ __('messages.label_description') }}</label>
                         <textarea id="categoryDescription"
                             class="w-full px-3 py-2 border rounded-lg"></textarea>
                     </div>
@@ -119,11 +115,11 @@
                 <div class="flex justify-end gap-3 mt-6">
                     <button type="button" onclick="closeModal()"
                         class="px-4 py-2 border rounded-lg hover:bg-gray-50">
-                        Batal
+                        {{ __('messages.button_cancel') }}
                     </button>
                     <button type="submit"
                         class="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-lg">
-                        Simpan
+                        {{ __('messages.button_save') }}
                     </button>
                 </div>
             </form>
@@ -160,7 +156,7 @@ function loadCategories() {
         let html = '';
 
         if (res.data.length === 0) {
-            html = `<p class="col-span-full text-center text-gray-500">Tidak ada kategori</p>`;
+            html = `<p class="col-span-full text-center text-gray-500">{{ __("messages.no_categories") }}</p>`;
         }
 
         res.data.forEach(cat => {
@@ -200,7 +196,7 @@ function loadCategories() {
 }
 
 function openCreateModal() {
-    $('#modalTitle').text('Tambah Kategori');
+    $('#modalTitle').text("{{ __('messages.categories_add_modal') }}");
     $('#categoryForm')[0].reset();
     $('#categoryId').val('');
     $('#categoryColor').val('#6c757d');
@@ -221,11 +217,11 @@ function closeModal() {
 function editCategory(id) {
     $.get(`/categories/${id}`, function (res) {
         if (!res.success) {
-            alert('Gagal memuat data kategori');
+            alert("{{ __('messages.category_load_error') }}");
             return;
         }
         const c = res.data;
-        $('#modalTitle').text('Edit Kategori');
+        $('#modalTitle').text("{{ __('messages.categories_edit_modal') }}");
         $('#categoryId').val(c.id);
         $('#categoryName').val(c.name);
         $('#categoryType').val(c.type);
@@ -236,7 +232,7 @@ function editCategory(id) {
         $('#categoryModal').removeClass('hidden');
     }).fail(function(xhr) {
         console.error('Error loading category:', xhr);
-        alert('Terjadi kesalahan saat memuat data kategori');
+        alert("{{ __('messages.category_load_error') }}");
     });
 }
 
@@ -258,12 +254,12 @@ function saveCategory() {
         },
         success(res) {
             if (!res || res.success === false) {
-                alert(res && res.message ? res.message : 'Gagal menyimpan kategori');
+                alert(res && res.message ? res.message : "{{ __('messages.category_saved_successfully') }}");
                 return;
             }
             closeModal();
             loadCategories();
-            alert('Kategori berhasil disimpan');
+            alert("{{ __('messages.category_saved_successfully') }}");
         },
         error(xhr) {
             console.error('Error saving category:', xhr);
@@ -272,7 +268,7 @@ function saveCategory() {
             } else if (xhr.responseJSON && xhr.responseJSON.message) {
                 alert(xhr.responseJSON.message);
             } else {
-                alert('Terjadi kesalahan saat menyimpan kategori');
+                alert("{{ __('messages.category_saved_successfully') }}");
             }
         }
     });

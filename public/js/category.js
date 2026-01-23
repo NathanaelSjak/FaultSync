@@ -1,12 +1,7 @@
-/**
- * Category Management JavaScript
- * Handles category CRUD operations, modals, and interactions
- */
 
 document.addEventListener("DOMContentLoaded", () => {
     console.log("Category Management JS Loaded");
 
-    // Initialize all components
     initDeleteConfirmation();
     initCategoryModals();
     initSearchFunctionality();
@@ -19,14 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
     initToastNotifications();
 });
 
-// ============================================
-// 1. DELETE CONFIRMATION
-// ============================================
 function initDeleteConfirmation() {
     const deleteForms = document.querySelectorAll("form.delete-confirm");
     const deleteButtons = document.querySelectorAll(".btn-delete");
 
-    // For form submissions
     deleteForms.forEach((form) => {
         form.addEventListener("submit", function (e) {
             if (!confirm("Apakah Anda yakin ingin menghapus kategori ini?")) {
@@ -36,7 +27,6 @@ function initDeleteConfirmation() {
         });
     });
 
-    // For button clicks (API requests)
     deleteButtons.forEach((button) => {
         button.addEventListener("click", function (e) {
             e.preventDefault();
@@ -51,23 +41,18 @@ function initDeleteConfirmation() {
     });
 }
 
-// ============================================
-// 2. MODAL MANAGEMENT
-// ============================================
 function initCategoryModals() {
     const modal = document.getElementById('categoryModal');
     const createBtn = document.getElementById('createCategoryBtn');
     const editBtns = document.querySelectorAll('.edit-category-btn');
     const closeBtns = document.querySelectorAll('.modal-close, .modal-cancel');
     
-    // Open create modal
     if (createBtn) {
         createBtn.addEventListener('click', () => {
             openModal('create');
         });
     }
     
-    // Open edit modal
     editBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             const categoryId = btn.dataset.id;
@@ -84,12 +69,10 @@ function initCategoryModals() {
         });
     });
     
-    // Close modals
     closeBtns.forEach(btn => {
         btn.addEventListener('click', closeModal);
     });
     
-    // Close modal on overlay click
     if (modal) {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
@@ -98,7 +81,6 @@ function initCategoryModals() {
         });
     }
     
-    // Close modal on ESC key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
@@ -114,7 +96,6 @@ function openModal(action = 'create', data = {}) {
     
     if (!modal) return;
     
-    // Reset form
     if (form) form.reset();
     
     if (action === 'create') {
@@ -123,7 +104,6 @@ function openModal(action = 'create', data = {}) {
         form.action = '/categories';
         form.method = 'POST';
         
-        // Set default values
         if (form.elements.type) {
             form.elements.type.value = 'expense';
         }
@@ -133,18 +113,15 @@ function openModal(action = 'create', data = {}) {
         form.action = `/categories/${data.id}`;
         form.method = 'PUT';
         
-        // Set form values
         if (form.elements.id) form.elements.id.value = data.id;
         if (form.elements.name) form.elements.name.value = data.name;
         if (form.elements.type) form.elements.type.value = data.type;
         if (form.elements.description) form.elements.description.value = data.description;
     }
     
-    // Show modal
     modal.classList.remove('hidden');
     modal.classList.add('flex');
     
-    // Focus on first input
     const firstInput = form.querySelector('input, select, textarea');
     if (firstInput) firstInput.focus();
 }
@@ -157,9 +134,6 @@ function closeModal() {
     }
 }
 
-// ============================================
-// 3. SEARCH FUNCTIONALITY
-// ============================================
 function initSearchFunctionality() {
     const searchInput = document.getElementById('categorySearch');
     const searchBtn = document.getElementById('searchBtn');
@@ -167,7 +141,6 @@ function initSearchFunctionality() {
     
     if (!searchInput) return;
     
-    // Search on input with debounce
     let searchTimeout;
     searchInput.addEventListener('input', function() {
         clearTimeout(searchTimeout);
@@ -176,14 +149,12 @@ function initSearchFunctionality() {
         }, 300);
     });
     
-    // Search on button click
     if (searchBtn) {
         searchBtn.addEventListener('click', () => {
             performSearch(searchInput.value);
         });
     }
     
-    // Clear search
     if (clearBtn) {
         clearBtn.addEventListener('click', () => {
             searchInput.value = '';
@@ -191,7 +162,6 @@ function initSearchFunctionality() {
         });
     }
     
-    // Search on Enter key
     searchInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
             performSearch(searchInput.value);
@@ -206,6 +176,9 @@ function performSearch(query) {
     const tableBody = document.querySelector('tbody');
     if (tableBody) {
         tableBody.innerHTML = `
+    const tableBody = document.querySelector('tbody');
+    if (tableBody) {
+        tableBody.innerHTML = `
             <tr>
                 <td colspan="5" class="text-center py-8">
                     <div class="spinner mx-auto"></div>
@@ -215,7 +188,6 @@ function performSearch(query) {
         `;
     }
     
-    // Send search request
     fetch(`/categories/search?search=${encodeURIComponent(query)}`, {
         headers: {
             'X-Requested-With': 'XMLHttpRequest',
@@ -232,13 +204,6 @@ function performSearch(query) {
     });
 }
 
-// ============================================
-// 4. TYPE FILTERS
-// ============================================
-function initTypeFilters() {
-    const filterButtons = document.querySelectorAll('.type-filter');
-    
-    filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             const type = this.dataset.type;
             
@@ -266,9 +231,6 @@ function filterCategoriesByType(type) {
     });
 }
 
-// ============================================
-// 5. STATUS TOGGLES
-// ============================================
 function initStatusToggles() {
     const statusToggles = document.querySelectorAll('.status-toggle');
     
@@ -297,7 +259,6 @@ function updateCategoryStatus(categoryId, status) {
             showToast('Status berhasil diperbarui', 'success');
         } else {
             showToast('Gagal memperbarui status', 'error');
-            // Revert toggle
             const toggle = document.querySelector(`.status-toggle[data-id="${categoryId}"]`);
             if (toggle) toggle.checked = !status;
         }
@@ -308,9 +269,6 @@ function updateCategoryStatus(categoryId, status) {
     });
 }
 
-// ============================================
-// 6. BULK ACTIONS
-// ============================================
 function initBulkActions() {
     const selectAll = document.getElementById('selectAll');
     const checkboxes = document.querySelectorAll('.category-checkbox');

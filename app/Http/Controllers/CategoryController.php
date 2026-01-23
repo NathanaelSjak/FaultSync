@@ -11,9 +11,6 @@ use Illuminate\Support\Facades\Log;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display all categories
-     */
     public function index()
     {
         return view('categories.index');

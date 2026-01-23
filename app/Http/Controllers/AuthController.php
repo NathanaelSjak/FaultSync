@@ -97,7 +97,6 @@ class AuthController extends Controller
             $request->session()->invalidate();
             $request->session()->regenerateToken();
 
-            // If it's an AJAX request, return JSON with redirect info
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -106,10 +105,8 @@ class AuthController extends Controller
                 ]);
             }
 
-            // Otherwise, redirect directly
             return redirect('/login');
         } catch (\Exception $e) {
-            // If it's an AJAX request, return JSON error
             if ($request->expectsJson() || $request->ajax()) {
                 return response()->json([
                     'success' => false,
@@ -117,9 +114,6 @@ class AuthController extends Controller
                     'error' => $e->getMessage()
                 ], 500);
             }
-
-            // Otherwise, redirect to login with error
-            return redirect('/login')->with('error', 'Failed to logout');
         }
     }
 
@@ -193,7 +187,6 @@ class AuthController extends Controller
         try {
             $user = Auth::user();
 
-            // Verify password
             if (!Hash::check($request->password, $user->password)) {
                 return response()->json([
                     'success' => false,
@@ -203,7 +196,6 @@ class AuthController extends Controller
 
             DB::beginTransaction();
 
-            // Delete user (cascade will handle related records)
             $user->delete();
 
             Auth::logout();

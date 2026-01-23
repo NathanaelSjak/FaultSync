@@ -12,6 +12,8 @@ RUN apk update && apk add --no-cache \
     oniguruma-dev \
     openssl-dev \
     linux-headers \
+    nodejs \
+    npm \
     $PHPIZE_DEPS
 
 RUN docker-php-ext-install \
@@ -24,23 +26,20 @@ RUN docker-php-ext-install \
     zip \
     opcache
 
-# RUN pecl install xdebug \
-#     && docker-php-ext-enable xdebug
-
-# RUN echo "xdebug.mode=develop,debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    # && echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    # && echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini \
-    # && echo "xdebug.client_port=9003" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
-
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
 COPY docker/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 COPY composer.json composer.lock ./
+COPY package.json ./
 
-RUN composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+RUN composer install --no-interaction --no-scripts
 
-COPY . .
+RUN npm install
 
+COPY . /var/www/html
+
+RUN chown -R www-data:www-data storage bootstrap/cache /var/www/html
 RUN chmod -R 775 storage bootstrap/cache
 
 COPY entrypoint/entrypoint.sh /entrypoint.sh

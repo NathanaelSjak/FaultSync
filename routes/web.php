@@ -5,6 +5,7 @@ use App\Http\Controllers\BankAccountController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\LocaleController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -149,3 +150,10 @@ Route::middleware('auth')->group(function() {
     });
     
 });
+
+/*
+|--------------------------------------------------------------------------
+| Locale Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/locale/{locale}', [LocaleController::class, 'switch'])->name('locale.switch');

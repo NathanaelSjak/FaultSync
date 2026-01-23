@@ -8,15 +8,11 @@ use Illuminate\Database\Seeder;
 
 class CategorySeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $users = User::all();
 
         foreach ($users as $user) {
-            // Income Categories
             $incomeCategories = [
                 ['name' => 'Gaji', 'type' => 'income', 'color' => '#10b981', 'icon' => 'fas fa-money-bill-wave'],
                 ['name' => 'Bonus', 'type' => 'income', 'color' => '#10b981', 'icon' => 'fas fa-gift'],

@@ -160,7 +160,6 @@ class BankAccountController extends Controller
             $bankAccount = BankAccount::where('user_id', Auth::id())
                 ->findOrFail($id);
 
-            // Check if account has transactions
             if ($bankAccount->transactions()->count() > 0) {
                 return response()->json([
                     'success' => false,
