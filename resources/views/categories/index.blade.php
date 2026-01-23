@@ -165,7 +165,7 @@ function loadCategories() {
                 <div class="flex items-center justify-between mb-2">
                     <span class="px-3 py-1 text-xs rounded-full"
                         style="background:${cat.color};color:white">
-                        ${cat.type === 'income' ? 'Pemasukan' : 'Pengeluaran'}
+                        ${cat.type === 'income' ? "{{ __('messages.categories_income') }}" : "{{ __('messages.categories_expense') }}"}
                     </span>
                     <div class="flex gap-2">
                         <button onclick="editCategory(${cat.id})" class="text-blue-500 hover:text-blue-700">
