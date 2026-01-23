@@ -7,7 +7,15 @@
 
     For **Linux Users**, follow the installation guide for Docker [here](https://docs.docker.com/engine/install/ubuntu/)
 
-2. Once Docker is all set up (if you are using Docker Desktop, make sure it is running in the background), head to the root of this project, and run the following command,
+2. Please make sure that the file vaultsync/entrypoint/entrypoint.sh is LF and not CRLF, if it is CRLF, change it to LF
+
+    ![LF File](/images/installation/lf-file.png)
+
+    If it is CRLF, change it to LF by pressing the highlighted red above, and then choosing LF here,
+
+    ![Change File Endins](/images/installation/change-file-endings.png)
+
+3. Once Docker is all set up (if you are using Docker Desktop, make sure it is running in the background), head to the root of this project, and run the following command,
 
     ```
     docker compose up --build -d
@@ -15,7 +23,7 @@
 
     This will migrate and run the Laravel, Nginx, and Database applications.
 
-3. The web application will run on your local machine at **port 8000**
+4. The web application will run on your local machine at **port 8000**
 
     ```
     localhost:8000
