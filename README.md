@@ -33,6 +33,8 @@
 
     ![Login Page](/images/desktop/login-page.png)
 
+    ![Login Page Mobile](/images/mobile/login-page.png)
+
 2. **Register Page**
 
     The register page requires the user's name, email, password, and confirm password as its input.
@@ -42,6 +44,8 @@
     This page is accessible from the login page.
 
     ![Register Page](/images/desktop/register-page.png)
+
+    ![Register Page Mobile](/images/mobile/register-page.png)
 
 3. **Side Bar**
 
