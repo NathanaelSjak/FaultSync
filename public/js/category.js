@@ -172,10 +172,6 @@ function initSearchFunctionality() {
 function performSearch(query) {
     console.log('Searching for:', query);
     
-    // Show loading state
-    const tableBody = document.querySelector('tbody');
-    if (tableBody) {
-        tableBody.innerHTML = `
     const tableBody = document.querySelector('tbody');
     if (tableBody) {
         tableBody.innerHTML = `
@@ -204,14 +200,16 @@ function performSearch(query) {
     });
 }
 
+function initTypeFilters() {
+    const filterButtons = document.querySelectorAll('[data-filter]');
+    
+    filterButtons.forEach(button => {
         button.addEventListener('click', function() {
             const type = this.dataset.type;
             
-            // Update active state
             filterButtons.forEach(btn => btn.classList.remove('active'));
             this.classList.add('active');
             
-            // Filter table rows
             filterCategoriesByType(type);
         });
     });
@@ -277,7 +275,6 @@ function initBulkActions() {
     
     if (!selectAll || !checkboxes.length) return;
     
-    // Select all checkbox
     selectAll.addEventListener('change', function() {
         const isChecked = this.checked;
         checkboxes.forEach(checkbox => {
@@ -286,12 +283,10 @@ function initBulkActions() {
         toggleBulkActions();
     });
     
-    // Individual checkboxes
     checkboxes.forEach(checkbox => {
         checkbox.addEventListener('change', toggleBulkActions);
     });
     
-    // Delete selected
     if (deleteSelectedBtn) {
         deleteSelectedBtn.addEventListener('click', deleteSelectedCategories);
     }
@@ -341,9 +336,6 @@ function deleteSelectedCategories() {
     });
 }
 
-// ============================================
-// 7. FORM VALIDATION
-// ============================================
 function initFormValidation() {
     const forms = document.querySelectorAll('.category-form');
     
@@ -362,10 +354,8 @@ function validateCategoryForm(form) {
     
     let isValid = true;
     
-    // Clear previous errors
     clearFormErrors(form);
     
-    // Validate name
     if (!name) {
         showFieldError(form.elements.name, 'Nama kategori wajib diisi');
         isValid = false;
@@ -374,7 +364,6 @@ function validateCategoryForm(form) {
         isValid = false;
     }
     
-    // Validate type
     if (!type) {
         showFieldError(form.elements.type, 'Tipe kategori wajib dipilih');
         isValid = false;
@@ -403,14 +392,10 @@ function clearFormErrors(form) {
     fields.forEach(field => field.classList.remove('border-red-500'));
 }
 
-// ============================================
-// 8. DATA TABLE FUNCTIONS
-// ============================================
 function initDataTable() {
     const table = document.getElementById('categoriesTable');
     if (!table) return;
     
-    // Add data attributes to rows
     const rows = table.querySelectorAll('tbody tr');
     rows.forEach(row => {
         const type = row.cells[1]?.textContent.trim().toLowerCase();
@@ -484,13 +469,9 @@ function updateTable(categories) {
     
     tbody.innerHTML = html;
     
-    // Reinitialize event listeners
     initDeleteConfirmation();
 }
 
-// ============================================
-// 9. HELPER FUNCTIONS
-// ============================================
 function getTypeBadgeClass(type) {
     return type === 'income' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800';
 }
@@ -508,9 +489,6 @@ function formatDate(dateString) {
     });
 }
 
-// ============================================
-// 10. TOOLTIPS
-// ============================================
 function initTooltips() {
     const tooltips = document.querySelectorAll('[data-tooltip]');
     
@@ -540,11 +518,7 @@ function hideTooltip() {
     if (tooltip) tooltip.remove();
 }
 
-// ============================================
-// 11. TOAST NOTIFICATIONS
-// ============================================
 function initToastNotifications() {
-    // Check for flash messages
     const flashSuccess = document.querySelector('.flash-success');
     const flashError = document.querySelector('.flash-error');
     
@@ -574,13 +548,11 @@ function showToast(message, type = 'info') {
     
     document.body.appendChild(toast);
     
-    // Animate in
     setTimeout(() => {
         toast.classList.remove('translate-x-full');
         toast.classList.add('translate-x-0');
     }, 10);
     
-    // Auto remove after 5 seconds
     setTimeout(() => {
         toast.classList.remove('translate-x-0');
         toast.classList.add('translate-x-full');
@@ -606,9 +578,6 @@ function getToastIcon(type) {
     }
 }
 
-// ============================================
-// 12. API FUNCTIONS
-// ============================================
 function deleteCategory(categoryId) {
     if (!confirm('Apakah Anda yakin ingin menghapus kategori ini?')) {
         return;
@@ -625,11 +594,9 @@ function deleteCategory(categoryId) {
     .then(data => {
         if (data.success) {
             showToast('Kategori berhasil dihapus', 'success');
-            // Remove row from table
             const row = document.querySelector(`tr[data-id="${categoryId}"]`);
             if (row) row.remove();
             
-            // Reload if on single page
             if (window.location.pathname === `/categories/${categoryId}`) {
                 window.location.href = '/categories';
             }
@@ -644,7 +611,6 @@ function deleteCategory(categoryId) {
 }
 
 function editCategory(categoryId) {
-    // Fetch category data and open edit modal
     fetch(`/categories/${categoryId}`)
     .then(response => response.json())
     .then(category => {
@@ -656,9 +622,6 @@ function editCategory(categoryId) {
     });
 }
 
-// ============================================
-// EXPORT FUNCTIONS FOR GLOBAL USE
-// ============================================
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.deleteCategory = deleteCategory;

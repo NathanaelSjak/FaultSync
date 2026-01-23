@@ -21,7 +21,6 @@ class EditCategoryRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                // Validasi unik berdasarkan user_id, kecuali kategori ini
                 Rule::unique('categories')->where(function ($query) use ($categoryId) {
                     return $query->where('user_id', auth()->id())
                                  ->where('id', '!=', $categoryId);

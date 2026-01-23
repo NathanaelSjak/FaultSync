@@ -135,7 +135,6 @@
 
 @push('scripts')
 <script>
-// Translation helper for JavaScript
 const translations = {
     income: "{{ __('messages.transactions_income') }}",
     expense: "{{ __('messages.transactions_expense') }}",
@@ -158,7 +157,6 @@ $(document).ready(function() {
         saveTransaction();
     });
     
-    // Set default date to today
     $('#transactionDate').val(new Date().toISOString().split('T')[0]);
 });
 

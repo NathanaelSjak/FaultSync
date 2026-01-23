@@ -16,7 +16,7 @@ return new class extends Migration
                   ->onUpdate('cascade');
             $table->string('bank_name');
             $table->string('account_number');
-            $table->string('type'); // e.g., 'savings', 'checking', 'credit'
+            $table->string('type');
             $table->text('description')->nullable();
             $table->softDeletes();
             $table->timestamps();

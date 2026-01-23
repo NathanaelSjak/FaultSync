@@ -138,7 +138,6 @@ $(document).ready(function () {
         saveCategory();
     });
 
-    // Update icon preview when icon changes
     $('#categoryIcon').on('change', function() {
         updateIconPreview();
     });

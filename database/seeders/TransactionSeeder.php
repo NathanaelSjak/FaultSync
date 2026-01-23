@@ -11,9 +11,6 @@ use Carbon\Carbon;
 
 class TransactionSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $users = User::all();
@@ -27,11 +24,9 @@ class TransactionSeeder extends Seeder
                 continue;
             }
 
-            // Create transactions for the last 3 months
             $startDate = Carbon::now()->subMonths(3);
             $endDate = Carbon::now();
 
-            // Create 20-30 income transactions
             $incomeCount = rand(20, 30);
             for ($i = 0; $i < $incomeCount; $i++) {
                 $date = Carbon::createFromTimestamp(
@@ -43,13 +38,12 @@ class TransactionSeeder extends Seeder
                     'bank_account_id' => $bankAccounts->random()->id,
                     'category_id' => $incomeCategories->isNotEmpty() ? $incomeCategories->random()->id : null,
                     'type' => 'income',
-                    'amount' => rand(500000, 10000000), // 500k - 10M
+                    'amount' => rand(500000, 10000000),
                     'description' => $this->getIncomeDescription(),
                     'date' => $date->format('Y-m-d'),
                 ]);
             }
 
-            // Create 30-50 expense transactions
             $expenseCount = rand(30, 50);
             for ($i = 0; $i < $expenseCount; $i++) {
                 $date = Carbon::createFromTimestamp(
@@ -61,7 +55,7 @@ class TransactionSeeder extends Seeder
                     'bank_account_id' => $bankAccounts->random()->id,
                     'category_id' => $expenseCategories->isNotEmpty() ? $expenseCategories->random()->id : null,
                     'type' => 'expense',
-                    'amount' => rand(10000, 5000000), // 10k - 5M
+                    'amount' => rand(10000, 5000000),
                     'description' => $this->getExpenseDescription(),
                     'date' => $date->format('Y-m-d'),
                 ]);

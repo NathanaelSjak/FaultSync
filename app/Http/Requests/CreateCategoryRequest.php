@@ -9,8 +9,7 @@ class CreateCategoryRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true; // Anda bisa ganti dengan auth check jika perlu
-        // Contoh: return auth()->check();
+        return true;
     }
 
     public function rules(): array
@@ -20,7 +19,6 @@ class CreateCategoryRequest extends FormRequest
                 'required',
                 'string',
                 'max:50',
-                // Validasi unik berdasarkan user_id dan type
                 Rule::unique('categories')->where(function ($query) {
                     return $query->where('user_id', auth()->id())
                                  ->where('type', $this->type);
@@ -29,7 +27,7 @@ class CreateCategoryRequest extends FormRequest
             'type' => [
                 'required',
                 'string',
-                'in:income,expense,transfer' // tambahkan 'transfer' jika perlu
+                'in:income,expense,transfer'
             ],
             'description' => 'nullable|string|max:255',
             'color' => 'nullable|string|max:20',
@@ -67,7 +65,6 @@ class CreateCategoryRequest extends FormRequest
 
     protected function prepareForValidation(): void
     {
-        // Trim whitespace dari input
         $this->merge([
             'name' => trim($this->name),
             'description' => $this->description ? trim($this->description) : null,
@@ -78,10 +75,8 @@ class CreateCategoryRequest extends FormRequest
     {
         $validated = parent::validated();
         
-        // Tambahkan user_id ke data yang divalidasi
         $validated['user_id'] = auth()->id();
         
-        // Set default values jika tidak diisi
         $validated['color'] = $validated['color'] ?? $this->getDefaultColor();
         $validated['icon'] = $validated['icon'] ?? $this->getDefaultIcon();
         $validated['status'] = $validated['status'] ?? true;
@@ -92,10 +87,10 @@ class CreateCategoryRequest extends FormRequest
     private function getDefaultColor(): string
     {
         return match($this->type) {
-            'income' => '#00ff00', // Green
-            'expense' => '#ff0000', // Red
-            'transfer' => '#0000ff', // Blue
-            default => '#6c757d', // Gray
+            'income' => '#00ff00',
+            'expense' => '#ff0000',
+            'transfer' => '#0000ff',
+            default => '#6c757d',
         };
     }
 

@@ -21,7 +21,6 @@ class CategorySeeder extends Seeder
                 ['name' => 'Lainnya', 'type' => 'income', 'color' => '#10b981', 'icon' => 'fas fa-coins'],
             ];
 
-            // Expense Categories
             $expenseCategories = [
                 ['name' => 'Makanan & Minuman', 'type' => 'expense', 'color' => '#ef4444', 'icon' => 'fas fa-utensils'],
                 ['name' => 'Transportasi', 'type' => 'expense', 'color' => '#ef4444', 'icon' => 'fas fa-car'],

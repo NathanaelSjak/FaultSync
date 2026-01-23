@@ -46,16 +46,11 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Store new category
-     */
     public function store(CreateCategoryRequest $request)
     {
         try {
-            // Ambil data validasi (sudah ada user_id, default, unique check)
             $data = $request->validated();
 
-            // Jaga-jaga: set default icon kalau kosong
             if (empty($data['icon'])) {
                 $data['icon'] = match ($data['type']) {
                     'income'   => 'fas fa-money-bill-wave',
@@ -87,9 +82,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Show category detail
-     */
     public function show($id)
     {
         try {
@@ -108,9 +100,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Update category
-     */
     public function update(EditCategoryRequest $request, $id)
     {
         try {
@@ -128,7 +117,6 @@ class CategoryController extends Controller
                 ], 422);
             }
 
-            // Set default icon based on type if not provided
             $defaultIcon = match($request->type ?? $category->type) {
                 'income' => 'fas fa-money-bill-wave',
                 'expense' => 'fas fa-shopping-cart',
@@ -160,9 +148,6 @@ class CategoryController extends Controller
         }
     }
 
-    /**
-     * Delete category (soft delete)
-     */
     public function destroy($id)
     {
         try {

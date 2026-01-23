@@ -17,22 +17,18 @@ class TransactionController extends Controller
             $query = Transaction::where('user_id', Auth::id())
                 ->with(['bankAccount', 'category']);
 
-            // Filter by bank account
             if ($request->has('bank_account_id') && $request->bank_account_id) {
                 $query->where('bank_account_id', $request->bank_account_id);
             }
 
-            // Filter by category
             if ($request->has('category_id') && $request->category_id) {
                 $query->where('category_id', $request->category_id);
             }
 
-            // Filter by type
             if ($request->has('type') && $request->type) {
                 $query->where('type', $request->type);
             }
 
-            // Filter by date range
             if ($request->has('start_date') && $request->start_date) {
                 $query->where('date', '>=', $request->start_date);
             }
@@ -71,7 +67,6 @@ class TransactionController extends Controller
                 'date' => 'required|date',
             ]);
 
-            // Verify bank account belongs to user
             $bankAccount = BankAccount::where('user_id', Auth::id())
                 ->findOrFail($request->bank_account_id);
 
@@ -149,7 +144,6 @@ class TransactionController extends Controller
                 'date' => 'required|date',
             ]);
 
-            // Verify bank account belongs to user
             $bankAccount = BankAccount::where('user_id', Auth::id())
                 ->findOrFail($request->bank_account_id);
 

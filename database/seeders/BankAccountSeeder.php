@@ -8,9 +8,6 @@ use Illuminate\Database\Seeder;
 
 class BankAccountSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
         $users = User::all();
@@ -27,7 +24,6 @@ class BankAccountSeeder extends Seeder
         ];
 
         foreach ($users as $user) {
-            // Create 2-4 bank accounts per user
             $accountCount = rand(2, 4);
             
             for ($i = 0; $i < $accountCount; $i++) {
